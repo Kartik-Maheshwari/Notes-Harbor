@@ -16,7 +16,7 @@ const Topnav = () => {
   };
 
   return (
-    <div className="flex-col gap-50  justify-evenly w-full">
+    <div className=" flex flex-col gap-50   justify-evenly w-full">
       <div className="topbar p-4 flex  items-center">
         {/* Left section */}
         <div className="flex items-center">
@@ -29,7 +29,7 @@ const Topnav = () => {
             <input
               type="text"
               placeholder={`Search for notes ${placeholder}`}
-              className="flex-grow px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:border-gray-500"
+              className="flex-grow px-4 py-2 rounded-lg border ml-10 w-72 border-gray-300 focus:outline-none focus:border-gray-500"
               onChange={(e) => setSearch(e.target.value)}
             />
             <button type="submit" className="ml-2 flex items-center bg-gray-800 text-white rounded-full p-2">
