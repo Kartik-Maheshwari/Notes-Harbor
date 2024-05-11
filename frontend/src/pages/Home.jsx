@@ -1,31 +1,17 @@
 import React from "react";
 import Topnav from "../components/Topnav.jsx";
 import Sidebar from "../components/Sidebar.jsx";
+import MainPage from "./MainPage.jsx";
 
 const HomePage = () => {
   return (
-    <div className="flex h-screen ">
-   
-    <div className="w-1/5 bg-gray-200 justify-evenly ">
-     <Sidebar/>
-    </div>
-    
-    {/* Main Content */}
-    <div className="flex flex-col w-full">
-      {/* Topnav */}
-      <div className="bg-blue-500 h-20 ">
-        <Topnav/>
-      </div>
-      
-      {/* Main Container */}
-      <div className="flex flex-grow justify-center items-center bg-gray-100">
-        {/* Your main content goes here */}
-        <h1 className="text-3xl font-bold">Welcome to HandNotes</h1>
-        
+    <div className="flex flex-col h-screen overflow-hidden">
+      <div className="h-20 bg-black"><Topnav/></div>
+      <div className="flex flex-1 overflow-hidden">
+        <div className="w-1/6 h-[90vh] overflow-hidden"><Sidebar/></div>
+        <div className="flex-1 h-[70vh] "><MainPage/></div>
       </div>
     </div>
-  </div>
-  
   );
 };
 
