@@ -1,7 +1,6 @@
 import React from "react";
 import { useState } from "react";
-// import { AiOutlineLibrary } from 'react-icons/ai';
-import { RiCloseLine } from 'react-icons/ri';
+import { RiSearchLine, RiUserLine, RiSettingsLine } from 'react-icons/ri'; // Import React icons
 
 const Topnav = () => {
   const [search, setSearch] = useState("");
@@ -17,52 +16,45 @@ const Topnav = () => {
   };
 
   return (
-    <>
-     <div className="flex-col gap-5  justify-center w-full">
-     <div className="topbar bg-gradient-to-r from-blue-500 to-purple-500 p-4 flex justify-between items-center">
-        <div className="topbar-left flex items-center">
-          <span className="topbar-left-icon text-white">
-            {/* <AiOutlineLibrary /> */}
-          </span>
-          <p className="topbar-title text-white">HandNotes</p>
-          <img
-            src="pfDefaultPic.png" // Placeholder image
-            alt="Profile"
-            className="topbar-right-Img-left cursor-pointer"
-            onClick={menuClickHandler}
-          />
+    <div className="flex-col gap-50  justify-evenly w-full">
+      <div className="topbar p-4 flex  items-center">
+        {/* Left section */}
+        <div className="flex items-center">
+          <p className="text-white font-bold   mr-56">HandNotes</p>
         </div>
-        <div className="topbar-center flex items-center flex-grow">
-          <form className="search-form flex items-center" onSubmit={searchSubmit}>
+
+        {/* Center section */}
+        <div className="flex items-center w-40 flex-grow">
+          <form className="flex items-center" onSubmit={searchSubmit}>
             <input
               type="text"
               placeholder={`Search for notes ${placeholder}`}
-              className="topbar-center-input flex-grow px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:border-gray-500"
+              className="flex-grow px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:border-gray-500"
               onChange={(e) => setSearch(e.target.value)}
             />
-            <button type="submit" className="ml-2 flex items-center justify-center bg-gray-800 text-white rounded-full p-2">
-              <img
-                src="https://img.icons8.com/ios-filled/50/000000/search--v2.png"
-                className="topbar-center-icon"
-                alt="Search"
-              />
+            <button type="submit" className="ml-2 flex items-center bg-gray-800 text-white rounded-full p-2">
+              <RiSearchLine className="text-white" />
             </button>
           </form>
         </div>
-        <div className="topbar-right">
+
+        {/* Right section */}
+        <div className="flex items-center">
           <img
-            src="https://img.icons8.com/color/48/undefined/facebook-messenger--v1.png"
-            alt="Messenger"
-            className="messenger-icon cursor-pointer"
+            src="pfDefaultPic.png" // Placeholder image
+            alt="Profile"
+            className="cursor-pointer"
+            onClick={menuClickHandler}
           />
+          <RiUserLine className="text-white ml-4 cursor-pointer" />
+          <RiSettingsLine className="text-white ml-4 cursor-pointer" />
         </div>
       </div>
 
       <div className="menu" style={{ height: "100vh" }}>
         {/* Menu content */}
       </div>
-     </div>
-    </>
+    </div>
   );
 };
 
