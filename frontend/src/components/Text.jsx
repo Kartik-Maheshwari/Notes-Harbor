@@ -17,10 +17,11 @@ const Text = ({ children, className = "", size, as, ...restProps }) => {
   return (
     <Component
       className={`text-left ${className} ${size && sizeClasses[size]}`}
-      {...restProps}>
+      {...restProps}
+    >
       {" "}
       {children}{" "}
     </Component>
   );
 };
-export { Text };
+export default Text;
