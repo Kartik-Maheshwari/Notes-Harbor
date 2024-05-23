@@ -3,7 +3,7 @@ import { RiHome2Line, RiUserLine, RiSettings3Line } from "react-icons/ri"; // Im
 
 const Sidebar = () => {
   return (
-    <div className="bg-gradient-to-r from-blue-500 to-purple-500 h-full w-full flex flex-col">
+    <div className="bg-gradient-to-r from-blue-500 to-purple-500 h-full w-full flex flex-col ">
       <div className="flex flex-col items-center mt-8">
         <span className="text-white text-lg font-semibold mb-4">
           NoteSharing

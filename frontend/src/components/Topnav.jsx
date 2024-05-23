@@ -16,7 +16,7 @@ const Topnav = () => {
   };
 
   return (
-    <div className=" flex flex-col gap-50   justify-evenly w-full">
+    <div className=" flex flex-col gap-50   justify-evenly w-full  ">
       <div className="topbar p-4 flex  items-center">
         {/* Left section */}
         <div className="flex items-center">
