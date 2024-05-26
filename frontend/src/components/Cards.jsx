@@ -1,10 +1,10 @@
-import React from 'react'
-import Card from './Card.jsx'
+import React from "react";
+import Card from "./Card.jsx";
 
-const Cards = ({data}) => {
+const Cards = ({ data }) => {
   return (
     <div className="flex flex-wrap justify-center gap-8">
-    {/* {data.map((card) => (
+      {/* {data.map((card) => (
       <Card
         key={card.id} // Add a unique key for each card (assuming an 'id' property)
         title={card.title}
@@ -12,10 +12,19 @@ const Cards = ({data}) => {
         description={card.description}
       />
     ))} */}
-    <Card/>
-   
-  </div>
-  )
-}
+      <Card />
+      <Card />
+      <Card />
+      <Card />
+      <Card />
+      <Card />
+      <Card />
+      <Card />
+      <Card />
+      <Card />
+      <Card />
+    </div>
+  );
+};
 
-export default Cards
+export default Cards;
