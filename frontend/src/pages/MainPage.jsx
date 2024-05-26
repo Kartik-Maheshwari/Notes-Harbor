@@ -49,7 +49,7 @@ const MainPage = () => {
           </button>
         </div>
       </div>
-      <div className="max-w-[80%] mx-auto gap-3">
+      <div className="max-w-[85%] mx-auto gap-3">
         <Cards selectedFilter={selectedFilter} />
       </div>
     </div>
