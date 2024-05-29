@@ -7,6 +7,7 @@ import {
   RiSettings3Line,
   RiMenuLine,
 } from "react-icons/ri"; // Import React icons
+import { MdLeaderboard } from "react-icons/md";
 
 const Sidebar = ({ isOpen, toggleSidebar }) => {
   return (
@@ -50,6 +51,13 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
           >
             <RiSettings3Line className="mr-2" />{" "}
             <span className={`${isOpen ? "block" : "hidden"}`}>Settings</span>
+          </Link>
+          <Link
+            to="/leaderboard"
+            className="text-white bg-transparent hover:bg-white hover:text-gray-800 border border-white hover:border-transparent rounded px-3 py-1 transition-colors duration-300 flex items-center"
+          >
+            <MdLeaderboard className="mr-2" />{" "}
+            <span className={`${isOpen ? "block" : "hidden"}`}>LeaderBoard</span>
           </Link>
         </div>
       </div>

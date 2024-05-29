@@ -6,8 +6,13 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Profile from "./pages/Profile.jsx";
 import Settings from "./pages/Settings.jsx";
 import MainPage from "./pages/MainPage.jsx";
+import Leaderboard from "./pages/LeaderBoard.jsx";
+import { useState } from "react";
 
 function App() {
+   const data = {
+
+   }
   return (
     <Router>
       <Routes>
@@ -17,6 +22,7 @@ function App() {
           <Route index element={<MainPage />} />
           <Route path="profile" element={<Profile />} />
           <Route path="settings" element={<Settings />} />
+          <Route path="leaderboard" element={<Leaderboard />}/>
         </Route>
       </Routes>
     </Router>
