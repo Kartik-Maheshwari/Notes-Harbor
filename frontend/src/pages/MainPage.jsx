@@ -2,6 +2,8 @@ import React from "react";
 import Card from "../components/Card.jsx";
 import Cards from "../components/Cards.jsx";
 import { FaFilter } from "react-icons/fa6"; // Import your filter icon
+import SingleCard from "../components/SingleCard.jsx"
+import UploadBox from "../components/Upload.jsx";
 
 const MainPage = () => {
   const [selectedFilter, setSelectedFilter] = React.useState("all"); // Initial filter state
@@ -50,7 +52,8 @@ const MainPage = () => {
         </div>
       </div>
       <div className="max-w-[85%] mx-auto gap-3">
-        <Cards selectedFilter={selectedFilter} />
+        {/* <Cards selectedFilter={selectedFilter} /> */}
+        <UploadBox/>
       </div>
     </div>
   );
