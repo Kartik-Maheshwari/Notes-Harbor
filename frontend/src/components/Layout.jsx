@@ -6,13 +6,14 @@ import Sidebar from "./Sidebar";
 
 const Layout = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [isLoggedIn , setIsLoggedIn] = useState(true);
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
   return (
     <div className="flex flex-col h-screen">
-      <Topnav />
+      <Topnav isLoggedIn={isLoggedIn} />
       <div className="flex flex-1 pt-16">
         <aside
           className={`fixed top-16 bottom-0 overflow-y-auto transition-width duration-300 ${

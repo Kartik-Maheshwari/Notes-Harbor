@@ -1,13 +1,23 @@
 import React, { useState } from "react";
-import { FiEye, FiEyeOff } from "react-icons/fi"; // Import the eye icons
+import { FiEye, FiEyeOff } from "react-icons/fi";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false); // State to toggle password visibility
+  const navigate = useNavigate();
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
+  };
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    // Simulate a successful login
+    if (email && password) {
+      navigate("/");
+    }
   };
 
   return (
@@ -16,7 +26,7 @@ const Login = () => {
         <h1 className="text-3xl font-semibold text-center mb-6 text-gray-800">
           Sign In
         </h1>
-        <form className="space-y-4">
+        <form className="space-y-4" onSubmit={handleSubmit}>
           <input
             type="email"
             placeholder="Email"
@@ -46,16 +56,13 @@ const Login = () => {
             Log In
           </button>
         </form>
-        {/* Display error message if needed */}
-        {/* {error && <p className="text-red-500">Something went wrong...</p>} */}
         <div className="mt-4 text-center">
           <p className="text-gray-600">
             Need an account?{" "}
-            <a href="/register" className="text-blue-500">
+            <a href="/signup" className="text-blue-500">
               Sign Up
             </a>
           </p>
-          
         </div>
       </div>
     </div>

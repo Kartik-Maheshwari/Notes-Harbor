@@ -1,16 +1,12 @@
-// src/components/Topnav.js
 import React, { useState } from "react";
-import {
-  RiSearchLine,
-  RiUserLine,
-  RiSettingsLine,
-  RiMenuLine,
-} from "react-icons/ri";
+import { Link } from "react-router-dom"; // Import Link from react-router-dom
+import { RiSearchLine, RiUserLine, RiMenuLine } from "react-icons/ri";
 
 const Topnav = () => {
   const [search, setSearch] = useState("");
   const [placeholder, setPlaceholder] = useState(""); // Placeholder state for the search input
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false); // State to track if the user is logged in
 
   const searchSubmit = (e) => {
     e.preventDefault();
@@ -21,6 +17,20 @@ const Topnav = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
 
+  const handleLogin = () => {
+    // Implement login functionality here
+    setIsLoggedIn(true);
+  };
+
+  const handleLogout = () => {
+    // Implement logout functionality here
+    setIsLoggedIn(false);
+  };
+
+  const handleSignup = () => {
+    // Implement signup functionality here
+  };
+
   return (
     <div className="fixed top-0 left-0 w-full bg-gray-800 z-10 p-4 flex items-center justify-between">
       {/* Left section */}
@@ -29,33 +39,46 @@ const Topnav = () => {
       </div>
 
       {/* Center section */}
-      <div className="hidden md:flex items-center w-full max-w-md mx-auto">
-        <form className="flex items-center w-full" onSubmit={searchSubmit}>
-          <input
-            type="text"
-            placeholder={`Search for notes ${placeholder}`}
-            className="flex-grow px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:border-gray-500"
-            onChange={(e) => setSearch(e.target.value)}
-          />
-          <button
-            type="submit"
-            className="ml-2 flex items-center bg-gray-800 text-white rounded-full p-2"
-          >
-            <RiSearchLine className="text-white" />
-          </button>
-        </form>
-      </div>
+      {isLoggedIn && (
+        <div className="hidden md:flex items-center w-full max-w-md mx-auto">
+          <form className="flex items-center w-full" onSubmit={searchSubmit}>
+            <input
+              type="text"
+              placeholder={`Search for notes ${placeholder}`}
+              className="flex-grow px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:border-gray-500"
+              onChange={(e) => setSearch(e.target.value)}
+            />
+            <button
+              type="submit"
+              className="ml-2 flex items-center bg-gray-800 text-white rounded-full p-2"
+            >
+              <RiSearchLine className="text-white" />
+            </button>
+          </form>
+        </div>
+      )}
 
       {/* Right section */}
       <div className="flex items-center">
-        <img
-          src="pfDefaultPic.png" // Placeholder image
-          alt="Profile"
-          className="cursor-pointer w-8 h-8 rounded-full"
-          onClick={menuClickHandler}
-        />
-        <RiUserLine className="text-white ml-4 cursor-pointer hidden md:block" />
-        <RiSettingsLine className="text-white ml-4 cursor-pointer hidden md:block" />
+        {isLoggedIn ? (
+          <>
+            <button
+              className="text-white ml-4"
+              onClick={handleLogout}
+            >
+              Logout
+            </button>
+          </>
+        ) : (
+          <>
+            <Link to="/login" className="text-white ml-4">
+              Login
+            </Link>
+            <Link to="/signup" className="text-white ml-4">
+              Sign Up
+            </Link>
+          </>
+        )}
         <button
           className="text-white ml-4 md:hidden"
           onClick={menuClickHandler}
@@ -67,26 +90,41 @@ const Topnav = () => {
       {/* Mobile Menu */}
       {isMobileMenuOpen && (
         <div className="absolute top-16 left-0 w-full bg-gray-800 text-white flex flex-col items-center md:hidden">
-          <div className="w-full p-4">
-            <form className="flex items-center w-full" onSubmit={searchSubmit}>
-              <input
-                type="text"
-                placeholder={`Search for notes ${placeholder}`}
-                className="flex-grow px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:border-gray-500"
-                onChange={(e) => setSearch(e.target.value)}
-              />
+          {isLoggedIn ? (
+            <>
+              <div className="w-full p-4">
+                <form className="flex items-center w-full" onSubmit={searchSubmit}>
+                  <input
+                    type="text"
+                    placeholder={`Search for notes ${placeholder}`}
+                    className="flex-grow px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:border-gray-500"
+                    onChange={(e) => setSearch(e.target.value)}
+                  />
+                  <button
+                    type="submit"
+                    className="ml-2 flex items-center bg-gray-800 text-white rounded-full p-2"
+                  >
+                    <RiSearchLine className="text-white" />
+                  </button>
+                </form>
+              </div>
               <button
-                type="submit"
-                className="ml-2 flex items-center bg-gray-800 text-white rounded-full p-2"
+                className="text-white my-2"
+                onClick={handleLogout}
               >
-                <RiSearchLine className="text-white" />
+                Logout
               </button>
-            </form>
-          </div>
-          <div className="flex flex-col items-center">
-            <RiUserLine className="text-white cursor-pointer my-2" />
-            <RiSettingsLine className="text-white cursor-pointer my-2" />
-          </div>
+            </>
+          ) : (
+            <>
+              <Link to="/login" className="text-white my-2">
+                Login
+              </Link>
+              <Link to="/signup" className="text-white my-2">
+                Sign Up
+              </Link>
+            </>
+          )}
         </div>
       )}
     </div>
