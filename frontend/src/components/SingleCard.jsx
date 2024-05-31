@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { AiOutlineHeart, AiOutlineComment, AiOutlineShareAlt } from 'react-icons/ai';
+import { AiOutlineArrowLeft } from 'react-icons/ai';
+import { Link } from 'react-router-dom';
 
-const PostCard = () => {
+const SingleCard = () => {
   const [showMore, setShowMore] = useState(false);
 
   const handleShowMore = () => {
@@ -20,6 +22,9 @@ const PostCard = () => {
       className="bg-white rounded-lg shadow-md overflow-hidden transition duration-200 ease-in-out transform hover:scale-105 hover:shadow-lg" // Combined hover effects
     >
       <div className="px-4 py-3 space-y-3"> {/* Added space-y-3 for vertical spacing */}
+      <Link to="/" className="text-white bg-transparent hover:bg-white hover:text-gray-800 border border-white hover:border-transparent rounded px-3 py-1 transition-colors duration-300 flex items-center" ><button type="button" className=' bg-black'  >
+      <AiOutlineArrowLeft />
+    </button> </Link>
         <div className="flex items-center border-b border-gray-200 pb-3"> {/* Added border */}
           <img
             className="w-10 h-10 rounded-full mr-3 object-cover"
@@ -58,4 +63,4 @@ const PostCard = () => {
   );
 };
 
-export default PostCard;
+export default SingleCard;

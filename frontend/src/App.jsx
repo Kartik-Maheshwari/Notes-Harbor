@@ -8,6 +8,7 @@ import Settings from "./pages/Settings.jsx";
 import MainPage from "./pages/MainPage.jsx";
 import Leaderboard from "./pages/LeaderBoard.jsx";
 import { useState } from "react";
+import SingleCard from "./components/SingleCard.jsx";
 
 function App() {
    const data = {
@@ -23,6 +24,8 @@ function App() {
           <Route path="profile" element={<Profile />} />
           <Route path="settings" element={<Settings />} />
           <Route path="leaderboard" element={<Leaderboard />}/>
+          <Route path="singlecard" element={<SingleCard />}/>
+          <Route path="/" element={<MainPage/>}/>
         </Route>
       </Routes>
     </Router>
