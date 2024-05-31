@@ -2,14 +2,24 @@ import React from "react";
 import Card from "../components/Card.jsx";
 import Cards from "../components/Cards.jsx";
 import { FaFilter } from "react-icons/fa6"; // Import your filter icon
-import SingleCard from "../components/SingleCard.jsx"
+import SingleCard from "../components/SingleCard.jsx";
 import UploadBox from "../components/Upload.jsx";
+import Modal from "../components/Modal.jsx"; // Import the Modal component
 
 const MainPage = () => {
   const [selectedFilter, setSelectedFilter] = React.useState("all"); // Initial filter state
+  const [isModalOpen, setIsModalOpen] = React.useState(false); // State to control modal visibility
 
   const handleFilterChange = (event) => {
     setSelectedFilter(event.target.value);
+  };
+
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
   };
 
   return (
@@ -21,9 +31,11 @@ const MainPage = () => {
           className="profile-picture rounded-full h-16 w-16 border border-gray-300" // Ensure circular class is applied
         />
         <div className="profile-buttons flex gap-4 mt-4 md:mt-0">
-          {" "}
-          <button className="profile-button px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300">
-            Activity
+          <button
+            className="profile-button px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300"
+            onClick={openModal} // Open modal on click
+          >
+            Upload
           </button>
           <button className="profile-button px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300">
             Details
@@ -52,9 +64,11 @@ const MainPage = () => {
         </div>
       </div>
       <div className="max-w-[85%] mx-auto gap-3">
-        {/* <Cards selectedFilter={selectedFilter} /> */}
-        <UploadBox/>
+        <Cards selectedFilter={selectedFilter} />
       </div>
+      <Modal isOpen={isModalOpen} onClose={closeModal}>
+        <UploadBox />
+      </Modal>
     </div>
   );
 };
