@@ -62,10 +62,7 @@ const Topnav = () => {
       <div className="flex items-center">
         {isLoggedIn ? (
           <>
-            <button
-              className="text-white ml-4"
-              onClick={handleLogout}
-            >
+            <button className="text-white ml-4" onClick={handleLogout}>
               Logout
             </button>
           </>
@@ -93,7 +90,10 @@ const Topnav = () => {
           {isLoggedIn ? (
             <>
               <div className="w-full p-4">
-                <form className="flex items-center w-full" onSubmit={searchSubmit}>
+                <form
+                  className="flex items-center w-full"
+                  onSubmit={searchSubmit}
+                >
                   <input
                     type="text"
                     placeholder={`Search for notes ${placeholder}`}
@@ -108,10 +108,7 @@ const Topnav = () => {
                   </button>
                 </form>
               </div>
-              <button
-                className="text-white my-2"
-                onClick={handleLogout}
-              >
+              <button className="text-white my-2" onClick={handleLogout}>
                 Logout
               </button>
             </>
