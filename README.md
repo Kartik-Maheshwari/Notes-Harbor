@@ -52,7 +52,7 @@ This is a MERN (MongoDB, Express, React, Node.js) application designed for colle
 
 4. Start the backend server:
     ```bash
-    npm start
+    npm run dev
     ```
 
 ### 💻 Frontend Setup
@@ -74,7 +74,7 @@ This is a MERN (MongoDB, Express, React, Node.js) application designed for colle
 
 4. Start the frontend development server:
     ```bash
-    npm start
+    npm run dev
     ```
 
 ## 🚀 Usage
