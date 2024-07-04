@@ -115,3 +115,11 @@ export const login = async (req, res) => {
     });
   }
 };
+
+//logout route handler
+export const logout = (req, res) => {
+  res.clearCookie("token").status(200).json({
+    success: true,
+    message: "User logged out successfully",
+  });
+};

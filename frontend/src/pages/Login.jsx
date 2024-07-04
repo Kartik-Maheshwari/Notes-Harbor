@@ -1,69 +1,97 @@
+// Login.jsx
+
 import React, { useState } from "react";
 import { FiEye, FiEyeOff } from "react-icons/fi";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom"; // Import useLocation for getting state from navigation
+import axios from "axios";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false); // State to toggle password visibility
+  const [showPassword, setShowPassword] = useState(false);
+  const [token, setToken] = useState("");
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
   const navigate = useNavigate();
+  const location = useLocation();
 
-  const togglePasswordVisibility = () => {
-    setShowPassword(!showPassword);
-  };
+  // Check if there's a message in location state (from Signup redirect)
+  const message = location.state?.message || "";
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    // Simulate a successful login
-    if (email && password) {
-      navigate("/");
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    setError("");
+    setSuccess("");
+
+    try {
+      const response = await axios.post("http://localhost:3000/v1/login", {
+        email,
+        password,
+      });
+
+      if (response.data.success) {
+        setSuccess("Login successful! Redirecting to homepage...");
+        localStorage.setItem("token", response.data.token);
+        setTimeout(() => {
+          navigate("/");
+        }, 2000); // Redirect after 2 seconds
+      } else {
+        setError(response.data.message);
+      }
+    } catch (error) {
+      setError(error.response.data.message || "An error occurred");
     }
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-blue-400 to-purple-500">
-      <div className="w-full max-w-md p-6 bg-white rounded-lg shadow-md transform transition-transform hover:scale-105">
-        <h1 className="text-3xl font-semibold text-center mb-6 text-gray-800">
-          Sign In
-        </h1>
-        <form className="space-y-4" onSubmit={handleSubmit}>
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-blue-500 to-purple-500">
+      <div className="w-96 bg-white shadow-md rounded p-8">
+        <h1 className="text-3xl font-semibold mb-6 text-center">LOGIN</h1>
+        {message && (
+          <div className="text-green-500 text-sm mb-4">{message}</div>
+        )}
+        <form onSubmit={handleLogin}>
           <input
-            type="email"
+            className="w-full bg-gray-100 border border-gray-300 rounded px-3 py-2 mb-4"
             placeholder="Email"
-            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-500"
             onChange={(e) => setEmail(e.target.value)}
+            type="email"
             required
           />
           <div className="relative">
             <input
-              type={showPassword ? "text" : "password"}
+              className="w-full bg-gray-100 border border-gray-300 rounded px-3 py-2 mb-4 pr-10"
               placeholder="Password"
-              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-500"
               onChange={(e) => setPassword(e.target.value)}
+              type={showPassword ? "text" : "password"}
               required
             />
-            <span
-              className="absolute top-2 right-2 cursor-pointer"
-              onClick={togglePasswordVisibility}
+            <div
+              className="absolute inset-y-0 right-0 flex items-center mb-5 pr-3 cursor-pointer"
+              onClick={() => setShowPassword(!showPassword)}
             >
               {showPassword ? <FiEyeOff /> : <FiEye />}
-            </span>
+            </div>
+          </div>
+          {error && <div className="text-red-500 text-sm mb-4">{error}</div>}
+          {success && (
+            <div className="text-green-500 text-sm mb-4">{success}</div>
+          )}
+          <div className="text-xs text-gray-500 mb-4">
+            By logging in, I consent to the processing of my personal data in
+            accordance with the{" "}
+            <a href="/privacy-policy" className="text-blue-500 underline">
+              PRIVACY POLICY
+            </a>
           </div>
           <button
-            className="w-full py-2 text-white bg-blue-500 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring focus:border-blue-500 transition-colors"
+            className="w-full bg-blue-500 text-white font-bold py-2 px-4 rounded mb-2"
             type="submit"
+            disabled={!email || !password}
           >
-            Log In
+            LOGIN
           </button>
         </form>
-        <div className="mt-4 text-center">
-          <p className="text-gray-600">
-            Need an account?{" "}
-            <a href="/signup" className="text-blue-500">
-              Sign Up
-            </a>
-          </p>
-        </div>
       </div>
     </div>
   );

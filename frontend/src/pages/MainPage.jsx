@@ -6,21 +6,78 @@ import SingleCard from "../components/SingleCard.jsx";
 import UploadBox from "../components/Upload.jsx";
 import Modal from "../components/Modal.jsx"; // Import the Modal component
 
-const MainPage = () => {
+const MainPage = ({ isLoggedIn }) => {
   const [selectedFilter, setSelectedFilter] = useState("all"); // Initial filter state
   const [isModalOpen, setIsModalOpen] = useState(false); // State to control modal visibility
   const [selectedSemester, setSelectedSemester] = useState(""); // State to track the selected semester
   const [selectedSubject, setSelectedSubject] = useState(""); // State to track the selected subject
+  console.log("Login hai ke nahi :", isLoggedIn);
 
   const subjectsBySemester = {
-    1: ["Math 101", "Physics 101", "Chemistry 101", "Biology 101", "CS 101", "English 101"],
-    2: ["Math 102", "Physics 102", "Chemistry 102", "Biology 102", "CS 102", "English 102"],
-    3: ["Math 201", "Physics 201", "Chemistry 201", "Biology 201", "CS 201", "English 201"],
-    4: ["Math 202", "Physics 202", "Chemistry 202", "Biology 202", "CS 202", "English 202"],
-    5: ["Math 301", "Physics 301", "Chemistry 301", "Biology 301", "CS 301", "English 301"],
-    6: ["Math 302", "Physics 302", "Chemistry 302", "Biology 302", "CS 302", "English 302"],
-    7: ["Math 401", "Physics 401", "Chemistry 401", "Biology 401", "CS 401", "English 401"],
-    8: ["Math 402", "Physics 402", "Chemistry 402", "Biology 402", "CS 402", "English 402"],
+    1: [
+      "Math 101",
+      "Physics 101",
+      "Chemistry 101",
+      "Biology 101",
+      "CS 101",
+      "English 101",
+    ],
+    2: [
+      "Math 102",
+      "Physics 102",
+      "Chemistry 102",
+      "Biology 102",
+      "CS 102",
+      "English 102",
+    ],
+    3: [
+      "Math 201",
+      "Physics 201",
+      "Chemistry 201",
+      "Biology 201",
+      "CS 201",
+      "English 201",
+    ],
+    4: [
+      "Math 202",
+      "Physics 202",
+      "Chemistry 202",
+      "Biology 202",
+      "CS 202",
+      "English 202",
+    ],
+    5: [
+      "Math 301",
+      "Physics 301",
+      "Chemistry 301",
+      "Biology 301",
+      "CS 301",
+      "English 301",
+    ],
+    6: [
+      "Math 302",
+      "Physics 302",
+      "Chemistry 302",
+      "Biology 302",
+      "CS 302",
+      "English 302",
+    ],
+    7: [
+      "Math 401",
+      "Physics 401",
+      "Chemistry 401",
+      "Biology 401",
+      "CS 401",
+      "English 401",
+    ],
+    8: [
+      "Math 402",
+      "Physics 402",
+      "Chemistry 402",
+      "Biology 402",
+      "CS 402",
+      "English 402",
+    ],
   };
 
   const handleFilterChange = (event) => {
@@ -112,7 +169,11 @@ const MainPage = () => {
         </div>
       </div>
       <div className="max-w-[85%] mx-auto gap-3">
-        <Cards selectedFilter={selectedFilter} selectedSemester={selectedSemester} selectedSubject={selectedSubject} />
+        <Cards
+          selectedFilter={selectedFilter}
+          selectedSemester={selectedSemester}
+          selectedSubject={selectedSubject}
+        />
       </div>
       <Modal isOpen={isModalOpen} onClose={closeModal}>
         <UploadBox />

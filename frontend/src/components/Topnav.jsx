@@ -1,44 +1,29 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom"; // Import Link from react-router-dom
-import { RiSearchLine, RiUserLine, RiMenuLine } from "react-icons/ri";
+// Topnav.jsx
 
-const Topnav = () => {
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
+import { RiSearchLine, RiUserLine, RiMenuLine } from "react-icons/ri";
+import axios from "axios";
+
+const Topnav = ({ isLoggedIn, handleLogout }) => {
   const [search, setSearch] = useState("");
-  const [placeholder, setPlaceholder] = useState(""); // Placeholder state for the search input
+  const [placeholder, setPlaceholder] = useState("");
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false); // State to track if the user is logged in
 
   const searchSubmit = (e) => {
     e.preventDefault();
-    // Add search functionality here
   };
 
   const menuClickHandler = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
 
-  const handleLogin = () => {
-    // Implement login functionality here
-    setIsLoggedIn(true);
-  };
-
-  const handleLogout = () => {
-    // Implement logout functionality here
-    setIsLoggedIn(false);
-  };
-
-  const handleSignup = () => {
-    // Implement signup functionality here
-  };
-
   return (
     <div className="fixed top-0 left-0 w-full bg-gray-800 z-10 p-4 flex items-center justify-between">
-      {/* Left section */}
       <div className="flex items-center">
         <p className="text-white font-bold">HandNotes</p>
       </div>
 
-      {/* Center section */}
       {isLoggedIn && (
         <div className="hidden md:flex items-center w-full max-w-md mx-auto">
           <form className="flex items-center w-full" onSubmit={searchSubmit}>
@@ -58,7 +43,6 @@ const Topnav = () => {
         </div>
       )}
 
-      {/* Right section */}
       <div className="flex items-center">
         {isLoggedIn ? (
           <>
@@ -84,7 +68,6 @@ const Topnav = () => {
         </button>
       </div>
 
-      {/* Mobile Menu */}
       {isMobileMenuOpen && (
         <div className="absolute top-16 left-0 w-full bg-gray-800 text-white flex flex-col items-center md:hidden">
           {isLoggedIn ? (
