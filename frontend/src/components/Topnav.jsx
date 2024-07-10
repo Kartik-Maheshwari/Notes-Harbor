@@ -3,12 +3,20 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { RiSearchLine, RiUserLine, RiMenuLine } from "react-icons/ri";
-import axios from "axios";
+import { useSelector, useDispatch } from "react-redux";
+import { logout } from "../store/authSlice";
 
-const Topnav = ({ isLoggedIn, handleLogout }) => {
+const Topnav = () => {
   const [search, setSearch] = useState("");
   const [placeholder, setPlaceholder] = useState("");
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
+  const dispatch = useDispatch();
+
+  const handleLogout = () => {
+    dispatch(logout());
+  };
 
   const searchSubmit = (e) => {
     e.preventDefault();

@@ -4,6 +4,8 @@ import React, { useState } from "react";
 import { FiEye, FiEyeOff } from "react-icons/fi";
 import { useNavigate, useLocation } from "react-router-dom"; // Import useLocation for getting state from navigation
 import axios from "axios";
+import { useDispatch } from "react-redux";
+import { login } from "../store/authSlice";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -14,22 +16,48 @@ const Login = () => {
   const [success, setSuccess] = useState("");
   const navigate = useNavigate();
   const location = useLocation();
+  const dispatch = useDispatch();
 
   // Check if there's a message in location state (from Signup redirect)
   const message = location.state?.message || "";
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
+  // const handleLogin = async (e) => {
+  //   e.preventDefault();
+  //   setError("");
+  //   setSuccess("");
+
+  //   try {
+  //     const response = await axios.post("http://localhost:3000/v1/login", {
+  //       email,
+  //       password,
+  //     });
+
+  //     if (response.data.success) {
+  //       setSuccess("Login successful! Redirecting to homepage...");
+  //       localStorage.setItem("token", response.data.token);
+  //       setTimeout(() => {
+  //         navigate("/");
+  //       }, 2000); // Redirect after 2 seconds
+  //     } else {
+  //       setError(response.data.message);
+  //     }
+  //   } catch (error) {
+  //     setError(error.response.data.message || "An error occurred");
+  //   }
+  // };
+
+  const handleLogin = async (event) => {
     setError("");
     setSuccess("");
-
+    event.preventDefault();
     try {
       const response = await axios.post("http://localhost:3000/v1/login", {
-        email,
-        password,
+        email: email,
+        password: password,
       });
-
+      // navigate("/");
       if (response.data.success) {
+        dispatch(login(response.data.user));
         setSuccess("Login successful! Redirecting to homepage...");
         localStorage.setItem("token", response.data.token);
         setTimeout(() => {
