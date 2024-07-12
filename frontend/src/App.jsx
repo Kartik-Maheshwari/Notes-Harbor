@@ -9,11 +9,13 @@ import MainPage from "./pages/MainPage.jsx";
 import Leaderboard from "./pages/LeaderBoard.jsx";
 import { useState } from "react";
 import SingleCard from "./components/SingleCard.jsx";
+import ManageUploads from "./components/ManageUploads";
+import ManageFollowers from "./components/ManageFollowers";
+import ManageFollowing from "./components/ManageFollowing";
+import AccountSettings from "./components/AccountSettings";
 
 function App() {
-   const data = {
-
-   }
+  const data = {};
   return (
     <Router>
       <Routes>
@@ -22,10 +24,17 @@ function App() {
         <Route path="/" element={<Layout />}>
           <Route index element={<MainPage />} />
           <Route path="profile" element={<Profile />} />
-          <Route path="settings" element={<Settings/>} />
-          <Route path="leaderboard" element={<Leaderboard />}/>
-          <Route path="singlecard" element={<SingleCard />}/>
-          <Route path="/" element={<MainPage/>}/>
+          <Route path="settings" element={<Settings />} />
+          <Route path="leaderboard" element={<Leaderboard />} />
+          <Route path="singlecard" element={<SingleCard />} />
+          <Route path="/" element={<MainPage />} />
+          <Route path="/settings/uploads" element={<ManageUploads />} />
+          <Route path="/settings/followers" element={<ManageFollowers />} />
+          <Route path="/settings/following" element={<ManageFollowing />} />
+          <Route
+            path="/settings/account-settings"
+            element={<AccountSettings />}
+          />
         </Route>
       </Routes>
     </Router>

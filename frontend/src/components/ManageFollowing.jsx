@@ -1,10 +1,10 @@
-import React, { useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { fetchFollowing, unfollowUser } from '../store/userSlice';
+import React, { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { fetchFollowing, unfollowUser } from "../store/userSlice";
 
 const ManageFollowing = () => {
   const dispatch = useDispatch();
-  const following = useSelector(state => state.user.following);
+  // const following = useSelector(state => state.user.following);
 
   useEffect(() => {
     dispatch(fetchFollowing());
@@ -17,14 +17,14 @@ const ManageFollowing = () => {
   return (
     <div>
       <h2>Manage Following</h2>
-      <ul>
+      {/* <ul>
         {following.map(user => (
           <li key={user.id}>
             {user.name} 
             <button onClick={() => handleUnfollowUser(user.id)}>Unfollow</button>
           </li>
         ))}
-      </ul>
+      </ul> */}
     </div>
   );
 };
