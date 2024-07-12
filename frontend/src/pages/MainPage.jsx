@@ -1,83 +1,30 @@
 import React, { useState } from "react";
+import { useSelector, useDispatch } from 'react-redux';
+import { FaFilter } from "react-icons/fa6";
 import Card from "../components/Card.jsx";
 import Cards from "../components/Cards.jsx";
-import { FaFilter } from "react-icons/fa6"; // Import your filter icon
 import SingleCard from "../components/SingleCard.jsx";
 import UploadBox from "../components/Upload.jsx";
-import Modal from "../components/Modal.jsx"; // Import the Modal component
+import Modal from "../components/Modal.jsx";
+import { login, logout } from "../store/authSlice.js";
 
-const MainPage = ({ isLoggedIn }) => {
-  const [selectedFilter, setSelectedFilter] = useState("all"); // Initial filter state
-  const [isModalOpen, setIsModalOpen] = useState(false); // State to control modal visibility
-  const [selectedSemester, setSelectedSemester] = useState(""); // State to track the selected semester
-  const [selectedSubject, setSelectedSubject] = useState(""); // State to track the selected subject
-  console.log("Login hai ke nahi :", isLoggedIn);
-
+const MainPage = () => {
+  const dispatch = useDispatch();
+  const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
+  const [selectedFilter, setSelectedFilter] = useState("all");
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedSemester, setSelectedSemester] = useState("");
+  const [selectedSubject, setSelectedSubject] = useState("");
+  
   const subjectsBySemester = {
-    1: [
-      "Math 101",
-      "Physics 101",
-      "Chemistry 101",
-      "Biology 101",
-      "CS 101",
-      "English 101",
-    ],
-    2: [
-      "Math 102",
-      "Physics 102",
-      "Chemistry 102",
-      "Biology 102",
-      "CS 102",
-      "English 102",
-    ],
-    3: [
-      "Math 201",
-      "Physics 201",
-      "Chemistry 201",
-      "Biology 201",
-      "CS 201",
-      "English 201",
-    ],
-    4: [
-      "Math 202",
-      "Physics 202",
-      "Chemistry 202",
-      "Biology 202",
-      "CS 202",
-      "English 202",
-    ],
-    5: [
-      "Math 301",
-      "Physics 301",
-      "Chemistry 301",
-      "Biology 301",
-      "CS 301",
-      "English 301",
-    ],
-    6: [
-      "Math 302",
-      "Physics 302",
-      "Chemistry 302",
-      "Biology 302",
-      "CS 302",
-      "English 302",
-    ],
-    7: [
-      "Math 401",
-      "Physics 401",
-      "Chemistry 401",
-      "Biology 401",
-      "CS 401",
-      "English 401",
-    ],
-    8: [
-      "Math 402",
-      "Physics 402",
-      "Chemistry 402",
-      "Biology 402",
-      "CS 402",
-      "English 402",
-    ],
+    1: ["Math 101", "Physics 101", "Chemistry 101", "Biology 101", "CS 101", "English 101"],
+    2: ["Math 102", "Physics 102", "Chemistry 102", "Biology 102", "CS 102", "English 102"],
+    3: ["Math 201", "Physics 201", "Chemistry 201", "Biology 201", "CS 201", "English 201"],
+    4: ["Math 202", "Physics 202", "Chemistry 202", "Biology 202", "CS 202", "English 202"],
+    5: ["Math 301", "Physics 301", "Chemistry 301", "Biology 301", "CS 301", "English 301"],
+    6: ["Math 302", "Physics 302", "Chemistry 302", "Biology 302", "CS 302", "English 302"],
+    7: ["Math 401", "Physics 401", "Chemistry 401", "Biology 401", "CS 401", "English 401"],
+    8: ["Math 402", "Physics 402", "Chemistry 402", "Biology 402", "CS 402", "English 402"],
   };
 
   const handleFilterChange = (event) => {
@@ -86,7 +33,7 @@ const MainPage = ({ isLoggedIn }) => {
 
   const handleSemesterChange = (event) => {
     setSelectedSemester(event.target.value);
-    setSelectedSubject(""); // Reset the subject when semester changes
+    setSelectedSubject("");
   };
 
   const handleSubjectChange = (event) => {
@@ -101,29 +48,42 @@ const MainPage = ({ isLoggedIn }) => {
     setIsModalOpen(false);
   };
 
+  const handleLogin = () => {
+    dispatch(login());
+  };
+
+  const handleLogout = () => {
+    dispatch(logout());
+  };
+
   return (
     <div className="flex flex-col gap-4 mt-2">
-      <div className="profile-section flex flex-col justify-center items-center md:flex-row md:justify-between md:items-center bg-slate-600 p-3 py-5 rounded-lg">
-        <img
-          src="path/to/profile-picture.jpg"
-          alt="Profile Picture"
-          className="profile-picture rounded-full h-16 w-16 border border-gray-300" // Ensure circular class is applied
-        />
-        <div className="profile-info flex flex-col items-center md:flex-row md:items-center gap-4 mt-4 md:mt-0">
-          <div className="followers text-white">
-            Followers: <span className="font-bold">123</span>
+     
+      
+      {isLoggedIn && (
+        <div className="profile-section flex flex-col justify-center items-center md:flex-row md:justify-between md:items-center bg-slate-600 p-3 py-5 rounded-lg">
+          <img
+            src="path/to/profile-picture.jpg"
+            alt="Profile Picture"
+            className="profile-picture rounded-full h-16 w-16 border border-gray-300"
+          />
+          <div className="profile-info flex flex-col items-center md:flex-row md:items-center gap-4 mt-4 md:mt-0">
+            <div className="followers text-white">
+              Followers: <span className="font-bold">123</span>
+            </div>
+            <div className="following text-white">
+              Following: <span className="font-bold">456</span>
+            </div>
+            <button
+              className="profile-button px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300"
+              onClick={openModal}
+            >
+              Upload
+            </button>
           </div>
-          <div className="following text-white">
-            Following: <span className="font-bold">456</span>
-          </div>
-          <button
-            className="profile-button px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300"
-            onClick={openModal} // Open modal on click
-          >
-            Upload
-          </button>
         </div>
-      </div>
+      )}
+      
       <div className="filter-container flex flex-col justify-center items-center md:flex-row md:justify-end md:items-center space-x-2">
         <div className="filter-dropdown flex items-center space-x-2">
           <select
@@ -134,7 +94,6 @@ const MainPage = ({ isLoggedIn }) => {
             <option value="all">All</option>
             <option value="most-rated">Most Rated</option>
             <option value="latest">Latest</option>
-            {/* Add more options here */}
           </select>
           <select
             value={selectedSemester}
@@ -168,6 +127,7 @@ const MainPage = ({ isLoggedIn }) => {
           </button>
         </div>
       </div>
+      
       <div className="max-w-[85%] mx-auto gap-3">
         <Cards
           selectedFilter={selectedFilter}
@@ -175,6 +135,7 @@ const MainPage = ({ isLoggedIn }) => {
           selectedSubject={selectedSubject}
         />
       </div>
+      
       <Modal isOpen={isModalOpen} onClose={closeModal}>
         <UploadBox />
       </Modal>

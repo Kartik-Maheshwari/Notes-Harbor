@@ -22,7 +22,7 @@ function App() {
         <Route path="/" element={<Layout />}>
           <Route index element={<MainPage />} />
           <Route path="profile" element={<Profile />} />
-          <Route path="settings" element={<Settings />} />
+          <Route path="settings" element={<Settings/>} />
           <Route path="leaderboard" element={<Leaderboard />}/>
           <Route path="singlecard" element={<SingleCard />}/>
           <Route path="/" element={<MainPage/>}/>

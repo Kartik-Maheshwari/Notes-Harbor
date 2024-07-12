@@ -4,8 +4,9 @@ dotenv.config();
 const dbconnect= ()=>{
     mongoose
     .connect(process.env.MONGO_URL, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
+      // deprecated in the new version
+      // useNewUrlParser: true,
+      // useUnifiedTopology: true,
     })
     .then(() => console.log("Connection is successfull"))
     .catch((e) => {
