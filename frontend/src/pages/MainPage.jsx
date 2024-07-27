@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector, useDispatch } from "react-redux";
 import { FaFilter } from "react-icons/fa6";
 import Card from "../components/Card.jsx";
 import Cards from "../components/Cards.jsx";
 import SingleCard from "../components/SingleCard.jsx";
 import UploadBox from "../components/Upload.jsx";
 import Modal from "../components/Modal.jsx";
-import axios from 'axios';
+import axios from "axios";
 import { login, logout } from "../store/authSlice.js";
 
 const MainPage = () => {
@@ -19,37 +19,99 @@ const MainPage = () => {
   const [profileData, setProfileData] = useState(null);
   const [followersCount, setFollowersCount] = useState(0);
   const [followingCount, setFollowingCount] = useState(0);
-  
+
   const subjectsBySemester = {
-    1: ["Math 101", "Physics 101", "Chemistry 101", "Biology 101", "CS 101", "English 101"],
-    2: ["Math 102", "Physics 102", "Chemistry 102", "Biology 102", "CS 102", "English 102"],
-    3: ["Math 201", "Physics 201", "Chemistry 201", "Biology 201", "CS 201", "English 201"],
-    4: ["Math 202", "Physics 202", "Chemistry 202", "Biology 202", "CS 202", "English 202"],
-    5: ["Math 301", "Physics 301", "Chemistry 301", "Biology 301", "CS 301", "English 301"],
-    6: ["Math 302", "Physics 302", "Chemistry 302", "Biology 302", "CS 302", "English 302"],
-    7: ["Math 401", "Physics 401", "Chemistry 401", "Biology 401", "CS 401", "English 401"],
-    8: ["Math 402", "Physics 402", "Chemistry 402", "Biology 402", "CS 402", "English 402"],
+    1: [
+      "Math 101",
+      "Physics 101",
+      "Chemistry 101",
+      "Biology 101",
+      "CS 101",
+      "English 101",
+    ],
+    2: [
+      "Math 102",
+      "Physics 102",
+      "Chemistry 102",
+      "Biology 102",
+      "CS 102",
+      "English 102",
+    ],
+    3: [
+      "Math 201",
+      "Physics 201",
+      "Chemistry 201",
+      "Biology 201",
+      "CS 201",
+      "English 201",
+    ],
+    4: [
+      "Math 202",
+      "Physics 202",
+      "Chemistry 202",
+      "Biology 202",
+      "CS 202",
+      "English 202",
+    ],
+    5: [
+      "Math 301",
+      "Physics 301",
+      "Chemistry 301",
+      "Biology 301",
+      "CS 301",
+      "English 301",
+    ],
+    6: [
+      "Math 302",
+      "Physics 302",
+      "Chemistry 302",
+      "Biology 302",
+      "CS 302",
+      "English 302",
+    ],
+    7: [
+      "Math 401",
+      "Physics 401",
+      "Chemistry 401",
+      "Biology 401",
+      "CS 401",
+      "English 401",
+    ],
+    8: [
+      "Math 402",
+      "Physics 402",
+      "Chemistry 402",
+      "Biology 402",
+      "CS 402",
+      "English 402",
+    ],
   };
 
   useEffect(() => {
     const fetchProfileData = async () => {
       try {
-        const profileResponse = await axios.get('http://localhost:3000/v1/profile');
+        const token = localStorage.getItem("token"); // Retrieve token from localStorage
+        const profileResponse = await axios.get(
+          "http://localhost:3000/v1/profile",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`, // Include the token in the Authorization header
+            },
+          }
+        );
+        console.log(profileResponse);
+
         setProfileData(profileResponse.data);
+        console.log(profileData);
 
-        const followersResponse = await axios.get('http://localhost:3000/v1/followers');
-        setFollowersCount(followersResponse.data.length);
-
-        const followingResponse = await axios.get('http://localhost:3000/v1/followings');
-        setFollowingCount(followingResponse.data.length);
+        setFollowersCount(profileResponse.data.followersCount);
+        setFollowingCount(profileResponse.data.followingCount);
       } catch (error) {
-        console.error('Failed to fetch profile data', error);
+        console.error("Error fetching profile data:", error);
       }
     };
 
-    if (isLoggedIn) {
-      fetchProfileData();
-    }
+    fetchProfileData();
   }, [isLoggedIn]);
 
   const handleFilterChange = (event) => {
@@ -86,16 +148,25 @@ const MainPage = () => {
       {isLoggedIn && profileData && (
         <div className="profile-section flex flex-col justify-center items-center md:flex-row md:justify-between md:items-center bg-slate-600 p-3 py-5 rounded-lg">
           <img
-            src={profileData.profilePicture || 'path/to/profile-picture.jpg'}
-            alt="Profile Picture"
+            src={profileData.profilePicture || "path/to/profile-picture.jpg"}
+            alt=" daal le bhai"
             className="profile-picture rounded-full h-16 w-16 border border-gray-300"
           />
+          <div className="following text-white text-2xl">
+            Welcome <span className="font-bold">{profileData.firstname}</span>
+          </div>
           <div className="profile-info flex flex-col items-center md:flex-row md:items-center gap-4 mt-4 md:mt-0">
             <div className="followers text-white">
-              Followers: <span className="font-bold">{followersCount}</span>
+              Followers:{" "}
+              <span className="font-bold">{profileData.followers.length}</span>
             </div>
             <div className="following text-white">
-              Following: <span className="font-bold">{followingCount}</span>
+              Following:{" "}
+              <span className="font-bold">{profileData.followings.length}</span>
+            </div>
+            <div className="following text-white">
+              Total Notes Uploaded:{" "}
+              <span className="font-bold">{profileData.notes.length}</span>
             </div>
             <button
               className="profile-button px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300"
@@ -106,7 +177,7 @@ const MainPage = () => {
           </div>
         </div>
       )}
-      
+
       <div className="filter-container flex flex-col justify-center items-center md:flex-row md:justify-end md:items-center space-x-2">
         <div className="filter-dropdown flex items-center space-x-2">
           <select
@@ -150,7 +221,7 @@ const MainPage = () => {
           </button>
         </div>
       </div>
-      
+
       <div className="max-w-[85%] mx-auto gap-3">
         <Cards
           selectedFilter={selectedFilter}
@@ -158,7 +229,7 @@ const MainPage = () => {
           selectedSubject={selectedSubject}
         />
       </div>
-      
+
       <Modal isOpen={isModalOpen} onClose={closeModal}>
         <UploadBox />
       </Modal>
