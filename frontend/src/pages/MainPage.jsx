@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from 'react-redux';
 import { FaFilter } from "react-icons/fa6";
 import Card from "../components/Card.jsx";
@@ -6,6 +6,7 @@ import Cards from "../components/Cards.jsx";
 import SingleCard from "../components/SingleCard.jsx";
 import UploadBox from "../components/Upload.jsx";
 import Modal from "../components/Modal.jsx";
+import axios from 'axios';
 import { login, logout } from "../store/authSlice.js";
 
 const MainPage = () => {
@@ -15,6 +16,9 @@ const MainPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedSemester, setSelectedSemester] = useState("");
   const [selectedSubject, setSelectedSubject] = useState("");
+  const [profileData, setProfileData] = useState(null);
+  const [followersCount, setFollowersCount] = useState(0);
+  const [followingCount, setFollowingCount] = useState(0);
   
   const subjectsBySemester = {
     1: ["Math 101", "Physics 101", "Chemistry 101", "Biology 101", "CS 101", "English 101"],
@@ -26,6 +30,27 @@ const MainPage = () => {
     7: ["Math 401", "Physics 401", "Chemistry 401", "Biology 401", "CS 401", "English 401"],
     8: ["Math 402", "Physics 402", "Chemistry 402", "Biology 402", "CS 402", "English 402"],
   };
+
+  useEffect(() => {
+    const fetchProfileData = async () => {
+      try {
+        const profileResponse = await axios.get('http://localhost:3000/v1/profile');
+        setProfileData(profileResponse.data);
+
+        const followersResponse = await axios.get('http://localhost:3000/v1/followers');
+        setFollowersCount(followersResponse.data.length);
+
+        const followingResponse = await axios.get('http://localhost:3000/v1/followings');
+        setFollowingCount(followingResponse.data.length);
+      } catch (error) {
+        console.error('Failed to fetch profile data', error);
+      }
+    };
+
+    if (isLoggedIn) {
+      fetchProfileData();
+    }
+  }, [isLoggedIn]);
 
   const handleFilterChange = (event) => {
     setSelectedFilter(event.target.value);
@@ -58,21 +83,19 @@ const MainPage = () => {
 
   return (
     <div className="flex flex-col gap-4 mt-2">
-     
-      
-      {isLoggedIn && (
+      {isLoggedIn && profileData && (
         <div className="profile-section flex flex-col justify-center items-center md:flex-row md:justify-between md:items-center bg-slate-600 p-3 py-5 rounded-lg">
           <img
-            src="path/to/profile-picture.jpg"
+            src={profileData.profilePicture || 'path/to/profile-picture.jpg'}
             alt="Profile Picture"
             className="profile-picture rounded-full h-16 w-16 border border-gray-300"
           />
           <div className="profile-info flex flex-col items-center md:flex-row md:items-center gap-4 mt-4 md:mt-0">
             <div className="followers text-white">
-              Followers: <span className="font-bold">123</span>
+              Followers: <span className="font-bold">{followersCount}</span>
             </div>
             <div className="following text-white">
-              Following: <span className="font-bold">456</span>
+              Following: <span className="font-bold">{followingCount}</span>
             </div>
             <button
               className="profile-button px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300"
