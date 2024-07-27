@@ -1,10 +1,16 @@
 // models/Following.js
-const mongoose = require('mongoose');
+import mongoose from "mongoose";
 
 const followingSchema = new mongoose.Schema({
-  userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-  followingId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+  followingId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    required: true,
+  },
   createdAt: { type: Date, default: Date.now },
 });
 
-module.exports = mongoose.model('Following', followingSchema);
+const Following = mongoose.model("Following", followingSchema);
+
+export default Following;
