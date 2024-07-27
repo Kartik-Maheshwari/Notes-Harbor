@@ -4,6 +4,7 @@ import User from "../models/Userschema.js";
 
 export const authenticate = async (req, res, next) => {
   const token = req.header("Authorization")?.replace("Bearer ", "");
+  console.log(token);
   if (!token)
     return res
       .status(401)

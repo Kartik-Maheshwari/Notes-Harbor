@@ -51,7 +51,7 @@ const Login = () => {
     setSuccess("");
     event.preventDefault();
     try {
-      const response = await axios.post("http://localhost:3000/v1/login", {
+      const response = await axios.post("http://localhost:3000/v1/auth/login", {
         email: email,
         password: password,
       });
