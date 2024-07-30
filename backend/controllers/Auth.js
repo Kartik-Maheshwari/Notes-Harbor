@@ -1,5 +1,5 @@
 import bcrypt from "bcrypt";
-import User from "../models/Userschema.js";
+import User from "../models/Userchema.js";
 import jwt from "jsonwebtoken";
 import "dotenv/config";
 

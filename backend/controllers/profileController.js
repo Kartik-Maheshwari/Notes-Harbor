@@ -1,4 +1,5 @@
-import User from '../models/User';
+import User from "../models/Userchema.js";
+
 
 export const getProfile = async (req, res) => {
   try {

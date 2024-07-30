@@ -32,26 +32,26 @@ const MainPage = () => {
   };
 
   useEffect(() => {
-    const fetchProfileData = async () => {
-      try {
-        const profileResponse = await axios.get('http://localhost:3000/v1/profile');
-        setProfileData(profileResponse.data);
-
-        const followersResponse = await axios.get('http://localhost:3000/v1/followers');
-        setFollowersCount(followersResponse.data.length);
-
-        const followingResponse = await axios.get('http://localhost:3000/v1/followings');
-        setFollowingCount(followingResponse.data.length);
-      } catch (error) {
-        console.error('Failed to fetch profile data', error);
-      }
-    };
-
     if (isLoggedIn) {
+      const fetchProfileData = async () => {
+        try {
+          const token = localStorage.getItem('token'); // Retrieve token from localStorage
+          const profileResponse = await axios.get('http://localhost:3000/v1/profile', {
+            headers: {
+              Authorization: `Bearer ${token}` // Include the token in the Authorization header
+            }
+          });
+          setProfileData(profileResponse.data);
+          setFollowersCount(profileResponse.data.followersCount);
+          setFollowingCount(profileResponse.data.followingCount);
+        } catch (error) {
+          console.error('Error fetching profile data:', error);
+        }
+      };
+
       fetchProfileData();
     }
   }, [isLoggedIn]);
-
   const handleFilterChange = (event) => {
     setSelectedFilter(event.target.value);
   };
@@ -83,10 +83,10 @@ const MainPage = () => {
 
   return (
     <div className="flex flex-col gap-4 mt-2">
-      {isLoggedIn && profileData && (
+      {isLoggedIn  && (
         <div className="profile-section flex flex-col justify-center items-center md:flex-row md:justify-between md:items-center bg-slate-600 p-3 py-5 rounded-lg">
           <img
-            src={profileData.profilePicture || 'path/to/profile-picture.jpg'}
+            src='/'
             alt="Profile Picture"
             className="profile-picture rounded-full h-16 w-16 border border-gray-300"
           />
