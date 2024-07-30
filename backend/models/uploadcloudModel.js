@@ -1,5 +1,5 @@
 // models/Upload.js
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
 const uploadSchema = new mongoose.Schema({
   url: {
@@ -16,6 +16,6 @@ const uploadSchema = new mongoose.Schema({
   },
 });
 
-const Upload = mongoose.model('Upload', uploadSchema);
+const Upload = mongoose.models.Upload || mongoose.model("Upload", uploadSchema);
 
 export default Upload;

@@ -35,28 +35,18 @@
 // router.get("/", authenticate, getFollowingsByUser);
 // router.delete("/:followingId", authenticate, unfollowUser);
 
-
-// //   profile data 
+// //   profile data
 // router.get('/', authenticate, getProfile);
-
 
 // export default router;
 
-
-
-
-
-
-
-
-
-
-import express from 'express';
-import authRoutes from './authRoutes.js';
-import uploadRoutes from './uploadRoutes.js';
-import followerRoutes from './followerRoutes.js';
-import followingRoutes from './followingRoutes.js';
-import profileRoutes from './profileRoutes.js';
+import express from "express";
+import authRoutes from "./authRoutes.js";
+import uploadRoutes from "./uploadRoutes.js";
+import followerRoutes from "./followerRoutes.js";
+import followingRoutes from "./followingRoutes.js";
+import profileRoutes from "./profileRoutes.js";
+import uploadCloudRoutes from "./uploadCloudRoute.js";
 
 const router = express.Router();
 
@@ -65,19 +55,6 @@ router.use('/uploads', uploadRoutes);
 router.use('/followers', followerRoutes);
 router.use('/followings', followingRoutes);
 router.use('/profile', profileRoutes);
-router.use('/uploadCloud', uploadCloudRoutes);
+router.use('/uploadCloud', uploadRoutes);
 
 export default router;
-
-
-
-
-
-
-
-
-
-
-
-
-
