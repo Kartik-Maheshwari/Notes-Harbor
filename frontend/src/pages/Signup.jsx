@@ -28,14 +28,17 @@ const Signup = () => {
     }
 
     try {
-      const response = await axios.post("http://localhost:3000/v1/signup", {
-        firstname,
-        lastname,
-        username,
-        email,
-        password,
-        cnfpassword: confirmpassword,
-      });
+      const response = await axios.post(
+        "http://localhost:3000/v1/auth/signup",
+        {
+          firstname,
+          lastname,
+          username,
+          email,
+          password,
+          cnfpassword: confirmpassword,
+        }
+      );
 
       if (response.data.success) {
         setSuccess("Account created successfully!");
