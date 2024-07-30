@@ -24,14 +24,12 @@
 //   });
 // });
 
-
-
-
 import express from "express";
 import "dotenv/config";
 import dbconnect from "./databases/db.js";
 import cors from "cors";
-import router from "./routes/routes.js";  // Updated router import
+// import rote from "./routes/routes.js";  // Updated router import
+import router from "./routes/routes.js";
 
 const app = express();
 const PORT = process.env.PORT;
