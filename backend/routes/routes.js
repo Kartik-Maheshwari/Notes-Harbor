@@ -65,7 +65,7 @@ router.use('/uploads', uploadRoutes);
 router.use('/followers', followerRoutes);
 router.use('/followings', followingRoutes);
 router.use('/profile', profileRoutes);
-router.use('/uploadCloud', uploadRoutes);
+router.use('/uploadCloud', uploadCloudRoutes);
 
 export default router;
 
