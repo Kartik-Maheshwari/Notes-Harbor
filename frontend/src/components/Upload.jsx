@@ -1,18 +1,18 @@
-import React, { useState } from 'react';
-import { AiOutlineUpload, AiOutlineInfoCircle } from 'react-icons/ai';
+import React, { useState } from "react";
+import { AiOutlineUpload, AiOutlineInfoCircle } from "react-icons/ai";
+import axios from "axios";
 
 const DocumentUpload = () => {
   const [selectedFile, setSelectedFile] = useState(null);
-  const [fileName, setFileName] = useState('');
-  const [fileType, setFileType] = useState('');
-
+  const [fileName, setFileName] = useState("");
+  const [fileType, setFileType] = useState("");
   const [formData, setFormData] = useState({
-    title: '',
-    description: '',
-    previewImage: '',
-    authoredBy: '',
-    subjectName: '',
-    semester: '',
+    title: "",
+    description: "",
+    previewImage: "",
+    authoredBy: "",
+    subjectName: "",
+    semester: "",
     // Add other relevant details here (e.g., keywords, tags)
   });
 
@@ -20,37 +20,77 @@ const DocumentUpload = () => {
     const file = event.target.files[0];
     setSelectedFile(file);
     setFileName(file.name);
-    const ext = file.name.split('.').pop().toLowerCase();
+    const ext = file.name.split(".").pop().toLowerCase();
     setFileType(ext);
   };
 
-  const isFileTypeValid = () => ['pdf', 'docx', 'ppt'].includes(fileType);
+  const isFileTypeValid = () => ["pdf", "docx", "ppt"].includes(fileType);
 
   const handleChange = (event) => {
     setFormData({ ...formData, [event.target.name]: event.target.value });
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    // Implement form submission logic here (e.g., send data to server)
-    console.log('Submitted data:', formData, selectedFile);
-    setSelectedFile(null);
-    setFileName('');
-    setFileType('');
-    setFormData({ title: '', description: '', previewImage: '', authoredBy: '', subjectName: '', semester: '' /* reset other details */ });
+
+    if (!selectedFile || !isFileTypeValid()) {
+      alert("Please select a valid file.");
+      return;
+    }
+
+    try {
+      const data = new FormData();
+      data.append("title", formData.title);
+      data.append("description", formData.description);
+      data.append("authoredBy", formData.authoredBy);
+      data.append("subjectName", formData.subjectName);
+      data.append("semester", formData.semester);
+      data.append("imageFile", selectedFile);
+
+      const token = localStorage.getItem("token");
+      const response = await axios.post(
+        "http://localhost:3000/v1/uploads/",
+        data,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      console.log("Upload success:", response.data);
+      setSelectedFile(null);
+      setFileName("");
+      setFileType("");
+      setFormData({
+        name: "Ktm",
+        title: "",
+        description: "",
+        previewImage: "",
+        authoredBy: "",
+        subjectName: "",
+        semester: "" /* reset other details */,
+      });
+    } catch (error) {
+      console.error("Upload failed:", error);
+      alert("Upload failed. Please try again.");
+    }
   };
 
   return (
     <div className="bg-white rounded-lg shadow-lg overflow-hidden transition duration-200 ease-in-out transform hover:scale-103 max-w-lg mx-auto mt-10">
       <div className="bg-gray-100 px-4 py-6">
         <div className="flex flex-col items-center space-y-3">
-          <label htmlFor="fileUpload" className="text-lg font-medium text-gray-700">
+          <label
+            htmlFor="fileUpload"
+            className="text-lg font-medium text-gray-700"
+          >
             Upload a File (PDF, DOCX, PPT)
           </label>
           <input
             type="file"
             id="fileUpload"
-            className="hidden"
             onChange={handleFileChange}
             accept=".pdf,.docx,.ppt"
             required
@@ -59,7 +99,7 @@ const DocumentUpload = () => {
             type="button"
             className="px-4 py-2 rounded-md bg-blue-500 text-white hover:bg-blue-700 focus:outline-none disabled:bg-gray-400 disabled:cursor-not-allowed flex items-center"
             disabled={!selectedFile || !isFileTypeValid()}
-            onClick={() => document.getElementById('fileUpload').click()}
+            onClick={() => document.getElementById("fileUpload").click()}
           >
             <AiOutlineUpload className="mr-2" /> Upload
           </button>
@@ -74,7 +114,10 @@ const DocumentUpload = () => {
       <div className="px-4 py-6 space-y-4 overflow-y-auto max-h-[60vh]">
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
-            <label htmlFor="title" className="block text-base font-medium text-gray-700">
+            <label
+              htmlFor="title"
+              className="block text-base font-medium text-gray-700"
+            >
               Title
             </label>
             <input
@@ -89,7 +132,10 @@ const DocumentUpload = () => {
           </div>
 
           <div className="space-y-2">
-            <label htmlFor="description" className="block text-base font-medium text-gray-700">
+            <label
+              htmlFor="description"
+              className="block text-base font-medium text-gray-700"
+            >
               Description
               <AiOutlineInfoCircle className="inline text-blue-500 hover:text-blue-700 cursor-pointer ml-1" />
             </label>
@@ -105,7 +151,10 @@ const DocumentUpload = () => {
           </div>
 
           <div className="space-y-2">
-            <label htmlFor="subjectName" className="block text-base font-medium text-gray-700">
+            <label
+              htmlFor="subjectName"
+              className="block text-base font-medium text-gray-700"
+            >
               Subject Name
             </label>
             <input
@@ -120,7 +169,10 @@ const DocumentUpload = () => {
           </div>
 
           <div className="space-y-2">
-            <label htmlFor="semester" className="block text-base font-medium text-gray-700">
+            <label
+              htmlFor="semester"
+              className="block text-base font-medium text-gray-700"
+            >
               Semester
             </label>
             <input
@@ -134,16 +186,15 @@ const DocumentUpload = () => {
             />
           </div>
 
-          {/* Sample data */}
           <div className="text-base text-gray-700">
             Sample Data:
             <br />
             Title: Sample Document
             <br />
-            Description: Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+            Description: Lorem ipsum dolor sit amet, consectetur adipiscing
+            elit.
           </div>
 
-          {/* Submit button */}
           <button
             type="submit"
             className="w-full px-4 py-2 rounded-md bg-blue-500 text-white hover:bg-blue-700 focus:outline-none"

@@ -19,6 +19,7 @@ const MainPage = () => {
   const [profileData, setProfileData] = useState(null);
   const [followersCount, setFollowersCount] = useState(0);
   const [followingCount, setFollowingCount] = useState(0);
+  const [uploads, setUploads] = useState([]);
 
   const subjectsBySemester = {
     1: [
@@ -90,16 +91,19 @@ const MainPage = () => {
   useEffect(() => {
     const fetchProfileData = async () => {
       try {
-        const profileResponse = await axios.get('http://localhost:3000/v1/profile');
+        const token = localStorage.getItem("token");
+        const profileResponse = await axios.get(
+          "http://localhost:3000/v1/profile",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
         setProfileData(profileResponse.data);
-
-        const followersResponse = await axios.get('http://localhost:3000/v1/followers');
-        setFollowersCount(followersResponse.data.length);
-
-        const followingResponse = await axios.get('http://localhost:3000/v1/followings');
-        setFollowingCount(followingResponse.data.length);
+        console.log(profileResponse.data);
       } catch (error) {
-        console.error('Failed to fetch profile data', error);
+        console.error("Failed to fetch profile data", error);
       }
     };
 
@@ -107,6 +111,24 @@ const MainPage = () => {
       fetchProfileData();
     }
   }, [isLoggedIn]);
+
+  useEffect(() => {
+    const fetchUploads = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:3000/v1/uploads/all"
+        ); // Your API endpoint
+        console.log(response.data);
+
+        setUploads(response.data);
+      } catch (error) {
+        console.error("Error fetching uploads:", error);
+      }
+    };
+
+    fetchUploads();
+  }, []);
+
   const handleFilterChange = (event) => {
     setSelectedFilter(event.target.value);
   };
@@ -138,10 +160,10 @@ const MainPage = () => {
 
   return (
     <div className="flex flex-col gap-4 mt-2">
-      {isLoggedIn  && (
+      {isLoggedIn && profileData && (
         <div className="profile-section flex flex-col justify-center items-center md:flex-row md:justify-between md:items-center bg-slate-600 p-3 py-5 rounded-lg">
           <img
-            src={profileData.profilePicture || 'path/to/profile-picture.jpg'}
+            src={profileData.profilePicture || "path/to/profile-picture.jpg"}
             alt="Profile Picture"
             className="profile-picture rounded-full h-16 w-16 border border-gray-300"
           />
@@ -220,6 +242,7 @@ const MainPage = () => {
           selectedFilter={selectedFilter}
           selectedSemester={selectedSemester}
           selectedSubject={selectedSubject}
+          uploads={uploads}
         />
       </div>
 

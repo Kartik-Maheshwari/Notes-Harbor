@@ -46,15 +46,13 @@ import uploadRoutes from "./uploadRoutes.js";
 import followerRoutes from "./followerRoutes.js";
 import followingRoutes from "./followingRoutes.js";
 import profileRoutes from "./profileRoutes.js";
-import uploadCloudRoutes from "./uploadCloudRoute.js";
 
 const router = express.Router();
 
-router.use('/auth', authRoutes);
-router.use('/uploads', uploadRoutes);
-router.use('/followers', followerRoutes);
-router.use('/followings', followingRoutes);
-router.use('/profile', profileRoutes);
-router.use('/uploadCloud', uploadCloudRoutes);
+router.use("/auth", authRoutes);
+router.use("/uploads", uploadRoutes);
+router.use("/followers", followerRoutes);
+router.use("/followings", followingRoutes);
+router.use("/profile", profileRoutes);
 
 export default router;
