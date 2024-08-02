@@ -1,20 +1,48 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { AiOutlineUpload, AiOutlineInfoCircle } from "react-icons/ai";
 import axios from "axios";
 
 const DocumentUpload = () => {
   const [selectedFile, setSelectedFile] = useState(null);
+
   const [fileName, setFileName] = useState("");
   const [fileType, setFileType] = useState("");
+  const [profileData, setProfileData] = useState(null);
+
   const [formData, setFormData] = useState({
+    userId: "",
+    name: "",
+    tags: "",
+    email: "",
     title: "",
     description: "",
     previewImage: "",
-    authoredBy: "",
     subjectName: "",
     semester: "",
     // Add other relevant details here (e.g., keywords, tags)
   });
+
+  const fetchProfileData = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const profileResponse = await axios.get(
+        "http://localhost:3000/v1/profile",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      setProfileData(profileResponse.data);
+      console.log("Upload ka matter", profileResponse.data);
+      console.log("Upload ka matter", profileData.email);
+    } catch (error) {
+      console.error("Failed to fetch profile data", error);
+    }
+  };
+  useEffect(() => {
+    fetchProfileData();
+  }, []);
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
@@ -27,7 +55,15 @@ const DocumentUpload = () => {
   const isFileTypeValid = () => ["pdf", "docx", "ppt"].includes(fileType);
 
   const handleChange = (event) => {
-    setFormData({ ...formData, [event.target.name]: event.target.value });
+    // setFormData({ name: profileData.firstname });
+    setFormData({
+      ...formData,
+      userId: profileData._id,
+      name: profileData.firstname,
+      email: profileData.email,
+      [event.target.name]: event.target.value,
+    });
+    console.log("Form data", formData);
   };
 
   const handleSubmit = async (event) => {
@@ -40,6 +76,9 @@ const DocumentUpload = () => {
 
     try {
       const data = new FormData();
+      data.append("name", profileData.firstname);
+      data.append("email", profileData.email);
+      data.append("userId", profileData._id);
       data.append("title", formData.title);
       data.append("description", formData.description);
       data.append("authoredBy", formData.authoredBy);
@@ -64,7 +103,8 @@ const DocumentUpload = () => {
       setFileName("");
       setFileType("");
       setFormData({
-        name: "Ktm",
+        userId: "",
+        name: "",
         title: "",
         description: "",
         previewImage: "",

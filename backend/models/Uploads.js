@@ -17,6 +17,8 @@ const uploadSchema = new mongoose.Schema({
   description: { type: String, required: true },
   previewImg: { type: String, required: true },
   createdAt: { type: Date, default: Date.now },
+  subjectName: { type: String },
+  semester: { type: String },
 });
 
 const Upload = mongoose.model("Upload", uploadSchema);

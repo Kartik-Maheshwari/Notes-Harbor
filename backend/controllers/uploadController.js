@@ -1,5 +1,6 @@
 // controllers/uploadController.js
 import Upload from "../models/Uploads.js";
+import User from "../models/Userchema.js";
 
 import { v2 as cloudinary } from "cloudinary";
 
@@ -123,10 +124,14 @@ export const fileupload = async (req, res) => {
       description,
     });
 
+    await User.findByIdAndUpdate(req.user._id, {
+      $push: { notes: fileData._id },
+    });
+
     res.json({
       success: true,
-      imageUrl: response.secure_url,
-      message: "Image successfully uploaded",
+      fileUrl: response.secure_url,
+      message: "File successfully uploaded",
     });
   } catch (error) {
     console.error(error);

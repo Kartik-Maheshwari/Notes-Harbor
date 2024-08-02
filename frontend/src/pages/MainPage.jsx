@@ -8,6 +8,7 @@ import UploadBox from "../components/Upload.jsx";
 import Modal from "../components/Modal.jsx";
 import axios from "axios";
 import { login, logout } from "../store/authSlice.js";
+import { jwtDecode } from "jwt-decode";
 
 const MainPage = () => {
   const dispatch = useDispatch();
@@ -248,6 +249,7 @@ const MainPage = () => {
 
       <Modal isOpen={isModalOpen} onClose={closeModal}>
         <UploadBox />
+        {/* <Sample /> */}
       </Modal>
     </div>
   );
