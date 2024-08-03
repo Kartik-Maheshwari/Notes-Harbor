@@ -14,6 +14,12 @@ const UserSchema = new mongoose.Schema(
     isAdmin: { type: Boolean, default: false },
     institution: { type: String, max: 50 },
     notes: [{ type: mongoose.Schema.Types.ObjectId, ref: "Upload" }],
+    additionalDetails: {
+      about: { type: String, default: "" },
+      gender: { type: String, default: "" },
+      contactNumber: { type: String, default: "" },
+      dateOfBirth: { type: Date, default: null },
+    },
   },
   { timestamps: true }
 );

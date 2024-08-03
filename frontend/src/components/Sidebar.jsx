@@ -8,8 +8,10 @@ import {
   RiMenuLine,
 } from "react-icons/ri"; // Import React icons
 import { MdLeaderboard } from "react-icons/md";
+import { useSelector } from "react-redux";
 
 const Sidebar = ({ isOpen, toggleSidebar }) => {
+  const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
   return (
     <div
       className={`bg-gradient-to-r from-blue-500 to-purple-500 h-full ${
@@ -38,26 +40,32 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
             <RiHome2Line className="mr-2" />{" "}
             <span className={`${isOpen ? "block" : "hidden"}`}>Home</span>
           </Link>
-          <Link
-            to="/profile"
-            className="text-white bg-transparent hover:bg-white hover:text-gray-800 border border-white hover:border-transparent rounded px-3 py-1 transition-colors duration-300 flex items-center"
-          >
-            <RiUserLine className="mr-2" />{" "}
-            <span className={`${isOpen ? "block" : "hidden"}`}>Profile</span>
-          </Link>
-          <Link
-            to="/settings"
-            className="text-white bg-transparent hover:bg-white hover:text-gray-800 border border-white hover:border-transparent rounded px-3 py-1 transition-colors duration-300 flex items-center"
-          >
-            <RiSettings3Line className="mr-2" />{" "}
-            <span className={`${isOpen ? "block" : "hidden"}`}>Settings</span>
-          </Link>
+          {isLoggedIn && (
+            <Link
+              to="/profile"
+              className="text-white bg-transparent hover:bg-white hover:text-gray-800 border border-white hover:border-transparent rounded px-3 py-1 transition-colors duration-300 flex items-center"
+            >
+              <RiUserLine className="mr-2" />{" "}
+              <span className={`${isOpen ? "block" : "hidden"}`}>Profile</span>
+            </Link>
+          )}
+          {isLoggedIn && (
+            <Link
+              to="/settings"
+              className="text-white bg-transparent hover:bg-white hover:text-gray-800 border border-white hover:border-transparent rounded px-3 py-1 transition-colors duration-300 flex items-center"
+            >
+              <RiSettings3Line className="mr-2" />{" "}
+              <span className={`${isOpen ? "block" : "hidden"}`}>Settings</span>
+            </Link>
+          )}
           <Link
             to="/leaderboard"
             className="text-white bg-transparent hover:bg-white hover:text-gray-800 border border-white hover:border-transparent rounded px-3 py-1 transition-colors duration-300 flex items-center"
           >
             <MdLeaderboard className="mr-2" />{" "}
-            <span className={`${isOpen ? "block" : "hidden"}`}>LeaderBoard</span>
+            <span className={`${isOpen ? "block" : "hidden"}`}>
+              LeaderBoard
+            </span>
           </Link>
         </div>
       </div>
