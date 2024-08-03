@@ -21,6 +21,7 @@ const MainPage = () => {
   const [followersCount, setFollowersCount] = useState(0);
   const [followingCount, setFollowingCount] = useState(0);
   const [uploads, setUploads] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   const subjectsBySemester = {
     1: [
@@ -115,15 +116,17 @@ const MainPage = () => {
 
   useEffect(() => {
     const fetchUploads = async () => {
+      setIsLoading(true);
       try {
         const response = await axios.get(
           "http://localhost:3000/v1/uploads/all"
-        ); // Your API endpoint
+        );
         console.log(response.data);
-
         setUploads(response.data);
       } catch (error) {
         console.error("Error fetching uploads:", error);
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -239,12 +242,23 @@ const MainPage = () => {
       </div>
 
       <div className="max-w-[85%] mx-auto gap-3">
-        <Cards
-          selectedFilter={selectedFilter}
-          selectedSemester={selectedSemester}
-          selectedSubject={selectedSubject}
-          uploads={uploads}
-        />
+      {isLoading ? (
+          <div className="flex justify-center items-center h-64">
+            <div className="spinner w-11 h-11 relative">
+              <div className="absolute w-full h-full bg-blue-500 rounded-full animate-[spinner-vse6n7_1.25s_infinite_ease]"></div>
+              <div className="absolute w-full h-full bg-blue-500 rounded-full animate-[spinner-vse6n7_1.25s_infinite_ease] [--rotation:90deg]"></div>
+              <div className="absolute w-full h-full bg-blue-500 rounded-full animate-[spinner-vse6n7_1.25s_infinite_ease] [--rotation:180deg]"></div>
+              <div className="absolute w-full h-full bg-blue-500 rounded-full animate-[spinner-vse6n7_1.25s_infinite_ease] [--rotation:270deg]"></div>
+            </div>
+          </div>
+        ) : (
+          <Cards
+            selectedFilter={selectedFilter}
+            selectedSemester={selectedSemester}
+            selectedSubject={selectedSubject}
+            uploads={uploads}
+          />
+             )}
       </div>
 
       <Modal isOpen={isModalOpen} onClose={closeModal}>
@@ -256,3 +270,4 @@ const MainPage = () => {
 };
 
 export default MainPage;
+   

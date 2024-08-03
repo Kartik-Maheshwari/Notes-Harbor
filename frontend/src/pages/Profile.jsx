@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import IconBtn from "../components/IconBtn";
+import { toast } from "react-toastify";
 
 export default function Profile() {
   const [profileData, setProfileData] = useState({
@@ -76,7 +77,7 @@ export default function Profile() {
         },
       });
       setIsEditing(false);
-      alert("Profile updated successfully!");
+      toast.success("Profile updated successfully!");
     } catch (error) {
       console.error("Failed to update profile", error);
       alert("An error occurred while updating the profile.");
