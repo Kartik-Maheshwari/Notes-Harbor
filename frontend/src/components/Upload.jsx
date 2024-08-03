@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { AiOutlineUpload, AiOutlineInfoCircle } from "react-icons/ai";
 import axios from "axios";
+import { toast, ToastContainer } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 const DocumentUpload = () => {
   const [selectedFile, setSelectedFile] = useState(null);
-
   const [fileName, setFileName] = useState("");
   const [fileType, setFileType] = useState("");
   const [profileData, setProfileData] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const [formData, setFormData] = useState({
     userId: "",
@@ -34,8 +36,6 @@ const DocumentUpload = () => {
         }
       );
       setProfileData(profileResponse.data);
-      console.log("Upload ka matter", profileResponse.data);
-      console.log("Upload ka matter", profileData.email);
     } catch (error) {
       console.error("Failed to fetch profile data", error);
     }
@@ -55,7 +55,6 @@ const DocumentUpload = () => {
   const isFileTypeValid = () => ["pdf", "docx", "ppt"].includes(fileType);
 
   const handleChange = (event) => {
-    // setFormData({ name: profileData.firstname });
     setFormData({
       ...formData,
       userId: profileData._id,
@@ -63,16 +62,17 @@ const DocumentUpload = () => {
       email: profileData.email,
       [event.target.name]: event.target.value,
     });
-    console.log("Form data", formData);
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
 
     if (!selectedFile || !isFileTypeValid()) {
-      alert("Please select a valid file.");
+      toast.error("Please select a valid file.");
       return;
     }
+
+    setLoading(true);
 
     try {
       const data = new FormData();
@@ -98,7 +98,9 @@ const DocumentUpload = () => {
         }
       );
 
-      console.log("Upload success:", response.data);
+      setLoading(false);
+      toast.success("Notes uploaded successfully!");
+
       setSelectedFile(null);
       setFileName("");
       setFileType("");
@@ -113,13 +115,15 @@ const DocumentUpload = () => {
         semester: "" /* reset other details */,
       });
     } catch (error) {
+      setLoading(false);
       console.error("Upload failed:", error);
-      alert("Upload failed. Please try again.");
+      toast.error("Upload failed. Please try again.");
     }
   };
 
   return (
     <div className="bg-white rounded-lg shadow-lg overflow-hidden transition duration-200 ease-in-out transform hover:scale-103 max-w-lg mx-auto mt-10">
+      <ToastContainer />
       <div className="bg-gray-100 px-4 py-6">
         <div className="flex flex-col items-center space-y-3">
           <label
@@ -133,15 +137,14 @@ const DocumentUpload = () => {
             id="fileUpload"
             onChange={handleFileChange}
             accept=".pdf,.docx,.ppt"
-            required
+            style={{ display: 'none' }}
           />
           <button
             type="button"
             className="px-4 py-2 rounded-md bg-blue-500 text-white hover:bg-blue-700 focus:outline-none disabled:bg-gray-400 disabled:cursor-not-allowed flex items-center"
-            disabled={!selectedFile || !isFileTypeValid()}
             onClick={() => document.getElementById("fileUpload").click()}
           >
-            <AiOutlineUpload className="mr-2" /> Upload
+            {loading ? "Uploading..." : <><AiOutlineUpload className="mr-2" /> {selectedFile ? "Change File" : "Choose File "}</>}
           </button>
           {selectedFile && (
             <div className="text-base text-gray-700">
@@ -238,8 +241,9 @@ const DocumentUpload = () => {
           <button
             type="submit"
             className="w-full px-4 py-2 rounded-md bg-blue-500 text-white hover:bg-blue-700 focus:outline-none"
+            disabled={loading}
           >
-            Submit
+            {loading ? "Uploading..." : "Submit"}
           </button>
         </form>
       </div>

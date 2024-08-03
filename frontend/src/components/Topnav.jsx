@@ -1,21 +1,26 @@
-// Topnav.jsx
-
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { RiSearchLine, RiUserLine, RiMenuLine } from "react-icons/ri";
 import { useSelector, useDispatch } from "react-redux";
 import { logout } from "../store/authSlice";
+import { toast, ToastContainer } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 const Topnav = () => {
   const [search, setSearch] = useState("");
   const [placeholder, setPlaceholder] = useState("");
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const navigate = useNavigate();
 
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
   const dispatch = useDispatch();
 
   const handleLogout = () => {
     dispatch(logout());
+    toast.error("Log out successful! Redirecting to homepage..." );
+    setTimeout(() => {
+      navigate('/');
+    }, 2000);
   };
 
   const searchSubmit = (e) => {
@@ -28,12 +33,13 @@ const Topnav = () => {
 
   return (
     <div className="fixed h-16 top-0 left-0 w-full bg-gray-800 z-10 p-4 flex items-center justify-between">
+      <ToastContainer />
       <div className="flex items-center">
         <p className="text-white font-bold">HandNotes</p>
       </div>
 
       {isLoggedIn && (
-        <div className="hidden md:flex items-center w-full  max-w-md mx-auto">
+        <div className="hidden md:flex items-center w-full max-w-md mx-auto">
           <form className="flex items-center w-full" onSubmit={searchSubmit}>
             <input
               type="text"
