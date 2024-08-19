@@ -1,39 +1,30 @@
 import React, { useState } from 'react';
-import { AiOutlineHeart, AiOutlineComment, AiOutlineShareAlt } from 'react-icons/ai';
-import { AiOutlineArrowLeft } from 'react-icons/ai';
+import { AiOutlineHeart, AiOutlineComment, AiOutlineShareAlt, AiOutlineArrowLeft } from 'react-icons/ai';
 import { Link } from 'react-router-dom';
+import PropTypes from 'prop-types';
 
-const SingleCard = () => {
+const SingleCard = ({ profilePic, name, image, title, description }) => {
   const [showMore, setShowMore] = useState(false);
 
   const handleShowMore = () => {
     setShowMore(!showMore);
   };
 
-  const sampleProfilePic = 'https://placeimg.com/64/64/people'; // Placeholder image
-  const sampleName = 'Jane Smith';
-  const sampleImage = 'https://placeimg.com/640/480/arch'; // Placeholder image
-  const sampleTitle = 'A Beautiful Landscape';
-  const sampleDescription =
-    'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean euismod bibendum laoreet. Proin pulvinar leo augue, ac egestas erat condimentum sed. Donec sed odio dui. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Maecenas pharetra convallis magna.';
-
   return (
-    <div
-      className="bg-white rounded-lg shadow-md overflow-hidden transition duration-200 ease-in-out transform hover:scale-105 hover:shadow-lg" // Combined hover effects
-    >
-      <div className="px-4 py-3 space-y-3"> {/* Added space-y-3 for vertical spacing */}
-      <Link to="/" className="text-white bg-transparent hover:bg-white hover:text-gray-800 border border-white hover:border-transparent rounded px-3 py-1 transition-colors duration-300 flex items-center" ><button type="button" className=' bg-black'  >
-      <AiOutlineArrowLeft />
-    </button> </Link>
-        <div className="flex items-center border-b border-gray-200 pb-3"> {/* Added border */}
+    <div className="bg-white rounded-lg shadow-md overflow-hidden transition duration-300 ease-in-out transform hover:scale-105 hover:shadow-xl hover:border-blue-500 border-2 border-transparent">
+      <div className="px-4 py-3 space-y-3">
+        <button onClick={onBack} className="text-gray-700 hover:bg-gray-200 border border-gray-300 rounded px-3 py-1 transition-colors duration-300 flex items-center">
+          <AiOutlineArrowLeft />
+        </button>
+        <div className="flex items-center border-b border-gray-200 pb-3">
           <img
             className="w-10 h-10 rounded-full mr-3 object-cover"
-            src={sampleProfilePic}
+            src={profilePic}
             alt="Profile picture"
           />
           <div className="flex-grow">
-            <p className="text-base font-medium">{sampleName}</p>
-            <div className="flex items-center space-x-2 text-gray-500 justify-end"> {/* Added justify-end for right alignment */}
+            <p className="text-base font-medium">{name}</p>
+            <div className="flex items-center space-x-2 text-gray-500 justify-end">
               <button type="button">
                 <AiOutlineHeart />
               </button>
@@ -46,13 +37,13 @@ const SingleCard = () => {
             </div>
           </div>
         </div>
-        <img className="w-full h-48 object-cover rounded-lg" src={sampleImage} alt="Post image" /> {/* Added rounded-lg for image border radius */}
+        <img className="w-full h-48 object-cover rounded-lg" src={image} alt="Post image" />
         <div className="px-4 py-3">
-          <p className="text-lg font-bold">{sampleTitle}</p>
+          <p className="text-lg font-bold">{title}</p>
           <p className="text-base text-gray-700">
-            {showMore ? sampleDescription : `${sampleDescription.substring(0, 100)}...`}
-            {sampleDescription.length > 100 && (
-              <button type="button" onClick={handleShowMore}>
+            {showMore ? description : `${description.substring(0, 100)}...`}
+            {description.length > 100 && (
+              <button type="button" onClick={handleShowMore} className="text-blue-500 ml-2">
                 {showMore ? 'Show Less' : 'See More'}
               </button>
             )}
@@ -61,6 +52,15 @@ const SingleCard = () => {
       </div>
     </div>
   );
+};
+
+SingleCard.propTypes = {
+  profilePic: PropTypes.string.isRequired,
+  name: PropTypes.string.isRequired,
+  image: PropTypes.string.isRequired,
+  title: PropTypes.string.isRequired,
+  description: PropTypes.string.isRequired,
+ 
 };
 
 export default SingleCard;

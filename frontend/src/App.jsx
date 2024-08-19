@@ -14,6 +14,14 @@ import ManageFollowers from "./components/ManageFollowers";
 import ManageFollowing from "./components/ManageFollowing";
 import AccountSettings from "./components/AccountSettings";
 
+
+
+const sampleProfilePic = 'https://placeimg.com/64/64/people';
+const sampleName = 'Jane Smith';
+const sampleImage = 'https://placeimg.com/640/480/arch';
+const sampleTitle = 'A Beautiful Landscape';
+const sampleDescription = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit...';
+
 function App() {
   const data = {};
   return (
@@ -26,16 +34,21 @@ function App() {
           <Route path="profile" element={<Profile />} />
           <Route path="settings" element={<Settings />} />
           <Route path="leaderboard" element={<Leaderboard />} />
-          <Route path="singlecard" element={<SingleCard />} />
+          
           <Route path="/" element={<MainPage />} />
+          <Route path="/singlecard" element={<SingleCard 
+            
+          />} />
           <Route path="/settings/uploads" element={<ManageUploads />} />
           <Route path="/settings/followers" element={<ManageFollowers />} />
           <Route path="/settings/following" element={<ManageFollowing />} />
           <Route
             path="/settings/account-settings"
             element={<AccountSettings />}
+            
           />
         </Route>
+        
       </Routes>
     </Router>
   );

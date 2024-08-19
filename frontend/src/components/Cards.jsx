@@ -17,11 +17,14 @@ const Cards = ({
     <div className="flex flex-wrap justify-center gap-8">
       {uploads.map((upload, index) => (
         <Card
-          key={index} // Unique key for each card
-          title={upload.public_id.replace("Codehelp/", "") + ".pdf"}
-          image={transformUrl(upload.secure_url)}
-          description={upload.description}
-        />
+  key={index}
+  title={upload.public_id.replace("Codehelp/", "") + ".pdf"}
+  image={transformUrl(upload.secure_url)}
+  description={upload.description}
+  fileUrl={upload.secure_url}
+/>
+
+
       ))}
     </div>
   );

@@ -3,7 +3,7 @@ import { AiOutlineDownload, AiOutlineEye } from "react-icons/ai";
 import { FaStar } from "react-icons/fa";
 import { Link } from "react-router-dom";
 
-const Card = ({ title, image, description }) => {
+const Card = ({ title, image, description, fileUrl }) => {
   const [clickCount, setClickCount] = useState(0);
 
   const handleStarClick = () => {
@@ -30,10 +30,15 @@ const Card = ({ title, image, description }) => {
         </div>
         <p className="mt-2 text-gray-600">{description}</p>
         <div className="mt-4 flex justify-between items-center">
-          <button className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 focus:outline-none focus:bg-blue-600 flex items-center w-28">
+          <a
+            href={fileUrl} // File URL to open in a new tab
+            target="_blank" // Opens the file in a new tab
+            rel="noopener noreferrer" // Adds security by preventing the new tab from accessing the original page
+            className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 focus:outline-none focus:bg-blue-600 flex items-center w-28"
+          >
             <AiOutlineDownload className="mr-2" />
-            Download Now
-          </button>
+          DownLoad
+          </a>
           <Link to="/singlecard">
             <button className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 focus:outline-none focus:bg-blue-600 flex items-center ml-3">
               <AiOutlineEye className="mr-2" />

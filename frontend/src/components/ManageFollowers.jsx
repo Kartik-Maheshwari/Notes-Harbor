@@ -3,19 +3,25 @@ import axios from 'axios';
 import { FaTrash, FaBan } from 'react-icons/fa';
 
 const ManageFollowers = () => {
-  const [followers, setFollowers] = useState([]);
+  const [followers, setFollowers] = useState([
+    { id: 1, name: 'John Doe', profilePicture: 'https://randomuser.me/api/portraits/men/1.jpg' },
+    { id: 2, name: 'Jane Smith', profilePicture: 'https://randomuser.me/api/portraits/women/2.jpg' },
+    { id: 3, name: 'Alice Johnson', profilePicture: 'https://randomuser.me/api/portraits/women/3.jpg' },
+    { id: 4, name: 'Bob Brown', profilePicture: 'https://randomuser.me/api/portraits/men/4.jpg' },
+    { id: 5, name: 'Charlie Green', profilePicture: 'https://randomuser.me/api/portraits/men/5.jpg' },
+  ]);
 
   useEffect(() => {
-    // Fetch the followers of the logged-in user
-    const fetchFollowers = async () => {
-      try {
-        const response = await axios.get('http://localhost:3000/v1/followers');
-        setFollowers(response.data);
-      } catch (error) {
-        console.error('Failed to fetch followers', error);
-      }
-    };
-    fetchFollowers();
+    // Uncomment this section when you have a working API to fetch followers
+    // const fetchFollowers = async () => {
+    //   try {
+    //     const response = await axios.get('http://localhost:3000/v1/followers');
+    //     setFollowers(response.data);
+    //   } catch (error) {
+    //     console.error('Failed to fetch followers', error);
+    //   }
+    // };
+    // fetchFollowers();
   }, []);
 
   const handleRemove = async (followerId) => {
