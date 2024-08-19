@@ -36,9 +36,8 @@ function App() {
           <Route path="leaderboard" element={<Leaderboard />} />
           
           <Route path="/" element={<MainPage />} />
-          <Route path="/singlecard" element={<SingleCard 
-            
-          />} />
+          <Route path="/singlecard/:id" element={<SingleCard />} />
+
           <Route path="/settings/uploads" element={<ManageUploads />} />
           <Route path="/settings/followers" element={<ManageFollowers />} />
           <Route path="/settings/following" element={<ManageFollowing />} />

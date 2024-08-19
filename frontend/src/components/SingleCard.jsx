@@ -1,13 +1,33 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { AiOutlineHeart, AiOutlineComment, AiOutlineShareAlt, AiOutlineArrowLeft } from 'react-icons/ai';
-import { Link } from 'react-router-dom';
+import { Link, useParams, useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import axios from 'axios';
 
-const SingleCard = ({ profilePic, name, image, title, description }) => {
+const SingleCard = () => {
+  const { id } = useParams();
+  const [cardData, setCardData] = useState({});
   const [showMore, setShowMore] = useState(false);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(`http://localhost:3000/v1/cards/${id}`);
+        setCardData(response.data);
+      } catch (error) {
+        console.error('Failed to fetch card data', error);
+      }
+    };
+    fetchData();
+  }, [id]);
 
   const handleShowMore = () => {
     setShowMore(!showMore);
+  };
+
+  const onBack = () => {
+    navigate(-1); // Navigate back to the previous page
   };
 
   return (
@@ -19,11 +39,11 @@ const SingleCard = ({ profilePic, name, image, title, description }) => {
         <div className="flex items-center border-b border-gray-200 pb-3">
           <img
             className="w-10 h-10 rounded-full mr-3 object-cover"
-            src={profilePic}
+            src={cardData.profilePic}
             alt="Profile picture"
           />
           <div className="flex-grow">
-            <p className="text-base font-medium">{name}</p>
+            <p className="text-base font-medium">{cardData.name}</p>
             <div className="flex items-center space-x-2 text-gray-500 justify-end">
               <button type="button">
                 <AiOutlineHeart />
@@ -37,12 +57,12 @@ const SingleCard = ({ profilePic, name, image, title, description }) => {
             </div>
           </div>
         </div>
-        <img className="w-full h-48 object-cover rounded-lg" src={image} alt="Post image" />
+        <img className="w-full h-48 object-cover rounded-lg" src={cardData.image} alt="Post image" />
         <div className="px-4 py-3">
-          <p className="text-lg font-bold">{title}</p>
+          <p className="text-lg font-bold">{cardData.title}</p>
           <p className="text-base text-gray-700">
-            {showMore ? description : `${description.substring(0, 100)}...`}
-            {description.length > 100 && (
+            {showMore ? cardData.description : `${cardData.description?.substring(0, 100)}...`}
+            {cardData.description?.length > 100 && (
               <button type="button" onClick={handleShowMore} className="text-blue-500 ml-2">
                 {showMore ? 'Show Less' : 'See More'}
               </button>
@@ -55,12 +75,11 @@ const SingleCard = ({ profilePic, name, image, title, description }) => {
 };
 
 SingleCard.propTypes = {
-  profilePic: PropTypes.string.isRequired,
-  name: PropTypes.string.isRequired,
-  image: PropTypes.string.isRequired,
-  title: PropTypes.string.isRequired,
-  description: PropTypes.string.isRequired,
- 
+  profilePic: PropTypes.string,
+  name: PropTypes.string,
+  image: PropTypes.string,
+  title: PropTypes.string,
+  description: PropTypes.string,
 };
 
 export default SingleCard;
