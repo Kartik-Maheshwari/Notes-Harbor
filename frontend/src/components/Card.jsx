@@ -1,13 +1,25 @@
 import React, { useState } from "react";
 import { AiOutlineDownload, AiOutlineEye } from "react-icons/ai";
 import { FaStar } from "react-icons/fa";
+import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const Card = ({ title, image, description, fileUrl }) => {
   const [clickCount, setClickCount] = useState(0);
+  const downloadurl = fileUrl.replace("/upload/", "/upload/fl_attachment/");
+
+  const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
 
   const handleStarClick = () => {
     setClickCount(clickCount + 1);
+  };
+
+  const handleDownloadClick = (e) => {
+    if (!isLoggedIn) {
+      e.preventDefault(); // Prevent the default anchor tag action
+      toast.error("Please login/signup to download the notes.");
+    }
   };
 
   return (
@@ -31,13 +43,13 @@ const Card = ({ title, image, description, fileUrl }) => {
         <p className="mt-2 text-gray-600">{description}</p>
         <div className="mt-4 flex justify-between items-center">
           <a
-            href={fileUrl} // File URL to open in a new tab
-            target="_blank" // Opens the file in a new tab
+            href={downloadurl} // File URL to open in a new tab
             rel="noopener noreferrer" // Adds security by preventing the new tab from accessing the original page
             className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 focus:outline-none focus:bg-blue-600 flex items-center w-28"
+            onClick={handleDownloadClick}
           >
             <AiOutlineDownload className="mr-2" />
-          DownLoad
+            DownLoad
           </a>
           <Link to="/singlecard">
             <button className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 focus:outline-none focus:bg-blue-600 flex items-center ml-3">

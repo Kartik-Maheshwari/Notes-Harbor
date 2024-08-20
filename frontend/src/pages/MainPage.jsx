@@ -8,6 +8,8 @@ import UploadBox from "../components/Upload.jsx";
 import Modal from "../components/Modal.jsx";
 import axios from "axios";
 import { login, logout } from "../store/authSlice.js";
+
+import { toast, ToastContainer } from "react-toastify";
 import { jwtDecode } from "jwt-decode";
 
 const MainPage = () => {
@@ -164,6 +166,15 @@ const MainPage = () => {
 
   return (
     <div className="flex flex-col gap-4 mt-2">
+      <ToastContainer
+        position="top-left" // Set the position of the toast
+        autoClose={5000} // Auto close the toast after 5 seconds
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnHover
+      />
       {isLoggedIn && profileData && (
         <div className="profile-section flex flex-col justify-center items-center md:flex-row md:justify-between md:items-center bg-slate-600 p-3 py-5 rounded-lg">
           <img
@@ -242,7 +253,7 @@ const MainPage = () => {
       </div>
 
       <div className="max-w-[85%] mx-auto gap-3">
-      {isLoading ? (
+        {isLoading ? (
           <div className="flex justify-center items-center h-64">
             <div className="spinner w-11 h-11 relative">
               <div className="absolute w-full h-full bg-blue-500 rounded-full animate-[spinner-vse6n7_1.25s_infinite_ease]"></div>
@@ -258,7 +269,7 @@ const MainPage = () => {
             selectedSubject={selectedSubject}
             uploads={uploads}
           />
-             )}
+        )}
       </div>
 
       <Modal isOpen={isModalOpen} onClose={closeModal}>
@@ -270,4 +281,3 @@ const MainPage = () => {
 };
 
 export default MainPage;
-   
