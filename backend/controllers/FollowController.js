@@ -103,3 +103,29 @@ export const getUserFollowers = async (req, res) => {
     return res.status(500).json({ message: err.message });
   }
 };
+
+// Fetch users by an array of IDs
+export const fetchUsersById = async (req, res) => {
+  try {
+    const { userIds } = req.body; // Expect an array of user IDs in the request body
+
+    if (!userIds || !Array.isArray(userIds)) {
+      return res
+        .status(400)
+        .json({ message: "Invalid input: Expected an array of user IDs." });
+    }
+
+    // Find users by their IDs and return selected fields
+    const users = await User.find({ _id: { $in: userIds } }).select(
+      "username firstname lastname email profilePicture"
+    );
+
+    if (!users.length) {
+      return res.status(404).json({ message: "No users found!" });
+    }
+
+    return res.status(200).json(users);
+  } catch (err) {
+    return res.status(500).json({ message: err.message });
+  }
+};
