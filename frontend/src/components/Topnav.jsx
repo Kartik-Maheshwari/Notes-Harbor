@@ -94,7 +94,8 @@ const Topnav = () => {
                   <input
                     type="text"
                     placeholder={`Search for notes ${placeholder}`}
-                    className="flex-grow px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:border-gray-500"
+                    className="flex-grow px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:border-gray-500
+                     text-stone-950"
                     onChange={(e) => setSearch(e.target.value)}
                   />
                   <button

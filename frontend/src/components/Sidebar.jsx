@@ -67,10 +67,19 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
               LeaderBoard
             </span>
           </Link>
+
         </div>
       </div>
-      <div className="flex justify-center mb-8">
-        {/* Additional sidebar content can be added here */}
+      <div className="flex justify-center m-8">
+      <Link
+            to="/allusers"
+            className="text-white bg-transparent hover:bg-white hover:text-gray-800 border border-white hover:border-transparent rounded px-3 py-1 transition-colors duration-300 flex items-center"
+          >
+            <MdLeaderboard className="mr-2" />{" "}
+            <span className={`${isOpen ? "block" : "hidden"}`}>
+             Alll Users
+            </span>
+          </Link>
       </div>
     </div>
   );

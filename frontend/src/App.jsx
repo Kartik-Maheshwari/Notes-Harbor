@@ -13,6 +13,7 @@ import ManageUploads from "./components/ManageUploads";
 import ManageFollowers from "./components/ManageFollowers";
 import ManageFollowing from "./components/ManageFollowing";
 import AccountSettings from "./components/AccountSettings";
+import AllUsers from "./pages/AllUsers.jsx";
 
 
 
@@ -34,6 +35,7 @@ function App() {
           <Route path="profile" element={<Profile />} />
           <Route path="settings" element={<Settings />} />
           <Route path="leaderboard" element={<Leaderboard />} />
+          <Route path="allusers" element={<AllUsers />} />
           
           <Route path="/" element={<MainPage />} />
           <Route path="/singlecard/:id" element={<SingleCard />} />
