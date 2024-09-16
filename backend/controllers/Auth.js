@@ -3,7 +3,7 @@ import User from "../models/Userchema.js";
 import jwt from "jsonwebtoken";
 import "dotenv/config";
 
-//signup route handlre
+//signup route handler
 
 export const signup = async (req, res) => {
   try {
