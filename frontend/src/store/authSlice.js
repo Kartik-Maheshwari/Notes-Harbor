@@ -8,7 +8,7 @@ const authSlice = createSlice({
   initialState: {
     isLoggedIn: !!token, // True if token exists
     user: null,
-    token: token,        // Store token
+    token: token, // Store token
   },
   reducers: {
     login: (state, action) => {
