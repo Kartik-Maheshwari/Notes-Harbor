@@ -53,30 +53,22 @@ const Login = () => {
   };
 
   useEffect(() => {
-    // Function to handle tab close
-    const handleTabClose = (event) => {
-      // Trigger the Redux logout action to clear user data from the state
-      dispatch(logout());
-    
-      // Clear the token from localStorage
+    // Function to handle tab close or refresh
+    const handleTabClose = () => {
+      // Clear the token and trigger the Redux logout action
       localStorage.removeItem("token");
-    
-      // Optional: Show a confirmation dialog (if needed)
-      event.preventDefault();
-      event.returnValue = ""; // This is required for the browser to show a dialog (modern browsers ignore this)
-      
+      dispatch(logout());
       console.log("Tab closed or refreshed. Logging out and clearing token."); // Debugging log
     };
-  
-    // Add event listener for tab close
+
+    // Add event listener for tab close or refresh
     window.addEventListener("beforeunload", handleTabClose);
-  
+
     // Clean up the event listener on component unmount
     return () => {
       window.removeEventListener("beforeunload", handleTabClose);
     };
   }, [dispatch]);
-  
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-dark-blue">
