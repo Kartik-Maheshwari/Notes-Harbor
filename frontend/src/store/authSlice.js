@@ -1,13 +1,14 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+// Check if token exists in localStorage
 const token = localStorage.getItem("token");
 
 const authSlice = createSlice({
   name: "auth",
   initialState: {
-    isLoggedIn: !!token,
+    isLoggedIn: !!token, // True if token exists
     user: null,
-    token: token,
+    token: token,        // Store token
   },
   reducers: {
     login: (state, action) => {
@@ -18,7 +19,7 @@ const authSlice = createSlice({
       state.isLoggedIn = false;
       state.user = null;
       state.token = null;
-      localStorage.removeItem("token");
+      localStorage.removeItem("token"); // Clear token from localStorage
     },
   },
 });

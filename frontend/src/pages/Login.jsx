@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FiEye, FiEyeOff } from "react-icons/fi";
 import { useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
 import { useDispatch } from "react-redux";
-import { login } from "../store/authSlice";
+import { login, logout } from "../store/authSlice"; // Adjust path if needed
 import { toast, ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -19,6 +19,7 @@ const Login = () => {
 
   const message = location.state?.message || "";
 
+  // Function to handle login
   const handleLogin = async (event) => {
     setError("");
     setSuccess("");
@@ -35,7 +36,6 @@ const Login = () => {
         localStorage.setItem("token", response.data.token);
         toast.success("Login successful! Redirecting to homepage...");
         setTimeout(() => {
-          console.log("Navigating to homepage"); // Debugging log
           navigate("/");
         }, 2000);
       } else {
@@ -51,6 +51,32 @@ const Login = () => {
       });
     }
   };
+
+  useEffect(() => {
+    // Function to handle tab close
+    const handleTabClose = (event) => {
+      // Trigger the Redux logout action to clear user data from the state
+      dispatch(logout());
+    
+      // Clear the token from localStorage
+      localStorage.removeItem("token");
+    
+      // Optional: Show a confirmation dialog (if needed)
+      event.preventDefault();
+      event.returnValue = ""; // This is required for the browser to show a dialog (modern browsers ignore this)
+      
+      console.log("Tab closed or refreshed. Logging out and clearing token."); // Debugging log
+    };
+  
+    // Add event listener for tab close
+    window.addEventListener("beforeunload", handleTabClose);
+  
+    // Clean up the event listener on component unmount
+    return () => {
+      window.removeEventListener("beforeunload", handleTabClose);
+    };
+  }, [dispatch]);
+  
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-dark-blue">
