@@ -5,7 +5,7 @@ import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 
-const Card = ({ title, image, description, fileUrl }) => {
+const Card = ({ title, image, description, fileUrl, note_id }) => {
   const [clickCount, setClickCount] = useState(0);
   const downloadurl = fileUrl.replace("/upload/", "/upload/fl_attachment/");
 
@@ -51,7 +51,7 @@ const Card = ({ title, image, description, fileUrl }) => {
             <AiOutlineDownload className="mr-2" />
             DownLoad
           </a>
-          <Link to="/singlecard">
+          <Link to={`/singlecard/${note_id}`}>
             <button className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 focus:outline-none focus:bg-blue-600 flex items-center ml-3">
               <AiOutlineEye className="mr-2" />
               View
