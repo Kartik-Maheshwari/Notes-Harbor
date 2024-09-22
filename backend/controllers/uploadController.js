@@ -141,3 +141,22 @@ export const fileupload = async (req, res) => {
     });
   }
 };
+
+export const getCardById = async (req, res) => {
+  const { id } = req.params; // Get the note_id from the request params
+
+  try {
+    // Fetch the card from the database using the note_id
+    const card = await Upload.findById(id);
+
+    if (!card) {
+      return res.status(404).json({ message: "Card not found" });
+    }
+
+    // Return the card data in the response
+    res.status(200).json(card);
+  } catch (error) {
+    console.error("Error fetching card data:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};

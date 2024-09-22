@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { AiOutlineHeart, AiOutlineComment, AiOutlineShareAlt, AiOutlineHome } from 'react-icons/ai';
-import { useParams, useNavigate } from 'react-router-dom';
+import { AiOutlineHeart, AiOutlineComment, AiOutlineShareAlt, AiOutlineArrowLeft } from 'react-icons/ai';
+import { Link, useParams, useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import axios from 'axios';
 
@@ -27,10 +27,12 @@ const SingleCard = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`http://localhost:3000/v1/cards/${id}`);
+        const response = await axios.get(
+          `http://localhost:3000/v1/uploads/${id}`
+        );
         setCardData(response.data);
       } catch (error) {
-        console.error('Failed to fetch card data', error);
+        console.error("Failed to fetch card data", error);
       }
     };
     fetchData();
@@ -58,10 +60,10 @@ const SingleCard = () => {
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-md overflow-hidden transition duration-300 ease-in-out transform hover:scale-105 hover:shadow-xl border-2 border-transparent m-4 w-80 h-80">
-      <div className="p-4 space-y-3">
+    <div className="bg-white rounded-lg shadow-md overflow-hidden transition duration-300 ease-in-out transform hover:scale-105 hover:shadow-xl hover:border-blue-500 border-2 border-transparent">
+      <div className="px-4 py-3 space-y-3">
         <button onClick={onBack} className="text-gray-700 hover:bg-gray-200 border border-gray-300 rounded px-3 py-1 transition-colors duration-300 flex items-center">
-          <AiOutlineHome className="text-xl" />
+          <AiOutlineArrowLeft />
         </button>
         <h2 className="text-lg font-bold text-center">{cardData.title}</h2>
         <img className="w-full h-32 object-cover rounded-lg" src={cardData.image} alt="Post" />
@@ -82,48 +84,18 @@ const SingleCard = () => {
             <p>Uploaded by: {cardData.uploader}</p>
           </div>
         </div>
-        <p className="text-base text-gray-700">
-          {showMore ? cardData.description : `${cardData.description?.substring(0, 100)}...`}
-          {cardData.description?.length > 100 && (
-            <button type="button" onClick={handleShowMore} className="text-blue-500 ml-2">
-              {showMore ? 'Show Less' : 'See More'}
-            </button>
-          )}
-        </p>
-      </div>
-
-      {/* Comment Dialog */}
-      {showCommentDialog && (
-        <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center">
-          <div className="bg-white rounded-lg p-6 shadow-lg">
-            <h2 className="text-xl font-bold mb-4">Add a Comment</h2>
-            <textarea
-              className="w-full border border-gray-300 rounded p-2"
-              rows="4"
-              placeholder="Write your comment..."
-              value={commentText}
-              onChange={(e) => setCommentText(e.target.value)}
-            ></textarea>
-            <div className="flex justify-end mt-4">
-              <button className="bg-blue-500 text-white px-4 py-2 rounded" onClick={submitComment}>Submit</button>
-              <button className="ml-2 text-gray-500" onClick={() => setShowCommentDialog(false)}>Cancel</button>
-            </div>
-          </div>
+        <img className="w-full h-48 object-cover rounded-lg" src={cardData.image} alt="Post image" />
+        <div className="px-4 py-3">
+          <p className="text-lg font-bold">{cardData.title}</p>
+          <p className="text-base text-gray-700">
+            {showMore ? cardData.description : `${cardData.description?.substring(0, 100)}...`}
+            {cardData.description?.length > 100 && (
+              <button type="button" onClick={handleShowMore} className="text-blue-500 ml-2">
+                {showMore ? 'Show Less' : 'See More'}
+              </button>
+            )}
+          </p>
         </div>
-      )}
-
-      {/* Comments Section */}
-      <div className="p-4 border-t border-gray-200">
-        <h3 className="font-bold">Comments:</h3>
-        {comments.length > 0 ? (
-          comments.map((comment, index) => (
-            <div key={index} className="mt-2 text-gray-700">
-              {comment}
-            </div>
-          ))
-        ) : (
-          <p className="text-gray-500">No comments yet.</p>
-        )}
       </div>
     </div>
   );
