@@ -5,7 +5,7 @@ import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 
-const Card = ({ title, image, description, fileUrl }) => {
+const Card = ({ title, image, description, fileUrl, note_id }) => {
   const [clickCount, setClickCount] = useState(0);
   const downloadurl = fileUrl.replace("/upload/", "/upload/fl_attachment/");
 

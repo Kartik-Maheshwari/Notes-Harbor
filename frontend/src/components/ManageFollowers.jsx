@@ -4,28 +4,41 @@ import { FaTrash, FaBan, FaInfoCircle } from "react-icons/fa";
 import Modal from "react-modal";
 
 const ManageFollowers = () => {
-  const [followers, setFollowers] = useState([
-    { id: 1, name: 'John Doe', profilePicture: 'https://randomuser.me/api/portraits/men/1.jpg' },
-    { id: 2, name: 'Jane Smith', profilePicture: 'https://randomuser.me/api/portraits/women/2.jpg' },
-    { id: 3, name: 'Alice Johnson', profilePicture: 'https://randomuser.me/api/portraits/women/3.jpg' },
-    { id: 4, name: 'Bob Brown', profilePicture: 'https://randomuser.me/api/portraits/men/4.jpg' },
-    { id: 5, name: 'Charlie Green', profilePicture: 'https://randomuser.me/api/portraits/men/5.jpg' },
-  ]);
-
+  const [followings, setFollowings] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedFollowing, setSelectedFollowing] = useState(null);
 
   useEffect(() => {
-    // Uncomment when you have a working API to fetch followers
-    // const fetchFollowers = async () => {
-    //   try {
-    //     const response = await axios.get('http://localhost:3000/v1/followers');
-    //     setFollowers(response.data);
-    //   } catch (error) {
-    //     console.error('Failed to fetch followers', error);
-    //   }
-    // };
-    // fetchFollowers();
+    const fetchFollowings = async () => {
+      try {
+        // Step 1: Fetch the followings array containing user IDs
+        const response = await axios.get(
+          "http://localhost:3000/v1/follow/followings",
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`, // Pass the token for authentication
+            },
+          }
+        );
+        const followingIds = response.data;
+
+        // Step 2: Fetch detailed information about the users
+        const usersResponse = await axios.post(
+          "http://localhost:3000/v1/follow/fetch-users",
+          { userIds: followingIds }, // Pass the array of user IDs
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
+        );
+        setFollowings(usersResponse.data);
+        console.log("Following data: ", usersResponse.data);
+      } catch (error) {
+        console.error("Failed to fetch followings", error);
+      }
+    };
+    fetchFollowings();
   }, []);
 
   const handleRemove = async (followingId) => {

@@ -10,11 +10,21 @@ function AllUsers() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [error, setError] = useState(null); // State to hold error messages
+  const token = localStorage.getItem("token");
 
   const handleFollow = async (userId) => {
     try {
+      const token = localStorage.getItem("token");
+      console.log("token hia:", token);
+      console.log("userid hia:", userId);
+
       const response = await axios.put(
-        `http://localhost:3000/v1/profile/follow/${userId}`
+        `http://localhost:3000/v1/follow/${userId}/follow`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
       if (response.status === 200) {
         setUsers((prevUsers) =>
@@ -31,7 +41,12 @@ function AllUsers() {
   const handleUnfollow = async (userId) => {
     try {
       const response = await axios.put(
-        `http://localhost:3000/v1/profile/unfollow/${userId}`
+        `http://localhost:3000/v1/follow/${userId}/unfollow`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
       if (response.status === 200) {
         setUsers((prevUsers) =>
