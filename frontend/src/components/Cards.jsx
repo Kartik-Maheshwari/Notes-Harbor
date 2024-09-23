@@ -14,7 +14,7 @@ const Cards = ({
   };
 
   return (
-    <div className="flex flex-wrap justify-center gap-8">
+    <div className="grid grid-cols-3 gap-8">
       {uploads.map((upload, index) => (
         <Card
           key={index}
@@ -23,6 +23,8 @@ const Cards = ({
           description={upload.description}
           fileUrl={upload.secure_url}
           note_id={upload.asset_id}
+          // Add custom width and height styles (optional)
+          style={{ width: "300px", height: "400px" }} // Adjust as needed
         />
       ))}
     </div>

@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-// Fetch token from sessionStorage instead of localStorage
-const token = sessionStorage.getItem("token");
+// Fetch token from localStorage
+const token = localStorage.getItem("token");
 
 const authSlice = createSlice({
   name: "auth",
@@ -13,16 +13,19 @@ const authSlice = createSlice({
   reducers: {
     login: (state, action) => {
       state.isLoggedIn = true;
-      state.user = action.payload;
-      // Store token in sessionStorage
-      sessionStorage.setItem("token", action.payload.token);
+      state.user = action.payload.user;
+      state.token = action.payload.token;
+      // Store token in localStorage
+      localStorage.setItem("token", action.payload.token);
     },
     logout: (state) => {
       state.isLoggedIn = false;
       state.user = null;
       state.token = null;
-      // Clear sessionStorage when logging out
-      sessionStorage.removeItem("token");
+      // Clear token from localStorage
+      localStorage.removeItem("token");
+      // Broadcast logout event to other tabs
+      localStorage.setItem("logout", Date.now()); // Trigger the storage event
     },
   },
 });
