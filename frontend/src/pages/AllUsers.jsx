@@ -2,24 +2,23 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { motion } from "framer-motion";
 import { FaUserPlus, FaUserMinus, FaInfoCircle } from "react-icons/fa";
+import { toast, ToastContainer } from "react-toastify";
 
 function AllUsers() {
   const [users, setUsers] = useState([]);
+  const [followedUserIds, setFollowedUserIds] = useState(new Set()); // Store followed user IDs
   const [isLoading, setIsLoading] = useState(true);
   const [selectedUser, setSelectedUser] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  const [error, setError] = useState(null); // State to hold error messages
+  const [error, setError] = useState(null);
   const token = localStorage.getItem("token");
 
   const handleFollow = async (userId) => {
     try {
-      const token = localStorage.getItem("token");
-      console.log("token hia:", token);
-      console.log("userid hia:", userId);
-
       const response = await axios.put(
         `http://localhost:3000/v1/follow/${userId}/follow`,
+        {},
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -32,9 +31,14 @@ function AllUsers() {
             user._id === userId ? { ...user, isFollowing: true } : user
           )
         );
+        setFollowedUserIds(
+          (prevFollowedUserIds) => new Set([...prevFollowedUserIds, userId])
+        );
+        toast.success("You are now following this user!");
       }
     } catch (error) {
       console.error("Error following user:", error);
+      toast.error("Failed to follow the user.");
     }
   };
 
@@ -42,6 +46,7 @@ function AllUsers() {
     try {
       const response = await axios.put(
         `http://localhost:3000/v1/follow/${userId}/unfollow`,
+        {},
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -54,9 +59,16 @@ function AllUsers() {
             user._id === userId ? { ...user, isFollowing: false } : user
           )
         );
+        setFollowedUserIds((prevFollowedUserIds) => {
+          const updatedFollowedUserIds = new Set(prevFollowedUserIds);
+          updatedFollowedUserIds.delete(userId);
+          return updatedFollowedUserIds;
+        });
+        toast.success("You have unfollowed this user!");
       }
     } catch (error) {
       console.error("Error unfollowing user:", error);
+      toast.error("Failed to unfollow the user.");
     }
   };
 
@@ -79,18 +91,40 @@ function AllUsers() {
         setIsLoading(false);
       } catch (error) {
         console.error("Error fetching users:", error);
-        setError("Failed to fetch users. Please try again later."); // Set error message
+        setError("Failed to fetch users. Please try again later.");
         setIsLoading(false);
       }
     };
 
+    const fetchFollowedUserIds = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:3000/v1/follow/followings",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        console.log("respose:", response.data);
+
+        const followedUserIds = new Set(response.data);
+        console.log("following ki id: ", Array.from(followedUserIds));
+
+        setFollowedUserIds(followedUserIds);
+      } catch (error) {
+        console.error("Error fetching followed users:", error);
+      }
+    };
+
     fetchUsers();
-  }, []);
+    fetchFollowedUserIds();
+  }, [token]);
 
   const filteredUsers = users.filter((user) => {
-    const username = user.username || ""; // Default to an empty string if undefined
-    const firstname = user.firstname || ""; // Default to an empty string if undefined
-    const lastname = user.lastname || ""; // Default to an empty string if undefined
+    const username = user.username || "";
+    const firstname = user.firstname || "";
+    const lastname = user.lastname || "";
 
     return (
       username.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -104,10 +138,8 @@ function AllUsers() {
     <div className="container mx-auto py-8">
       <h1 className="text-3xl font-bold text-center mb-4">All Users</h1>
 
-      {/* Error Message Display */}
       {error && <div className="text-red-500 text-center mb-4">{error}</div>}
 
-      {/* Search Input */}
       <div className="mb-4">
         <input
           type="text"
@@ -150,7 +182,7 @@ function AllUsers() {
               }`}</p>
               <p className="text-gray-500 mb-4">{user.email}</p>
               <div className="flex space-x-2">
-                {user.isFollowing ? (
+                {followedUserIds.has(user._id) ? (
                   <button
                     className="bg-red-500 text-white px-4 py-2 rounded-md"
                     onClick={() => handleUnfollow(user._id)}
@@ -201,6 +233,15 @@ function AllUsers() {
           </div>
         </div>
       )}
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        draggable
+        pauseOnHover
+      />
     </div>
   );
 }
