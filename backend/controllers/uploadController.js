@@ -113,13 +113,20 @@ export const fileupload = async (req, res) => {
 
     //------------------------------------------------------------------
 
+    const transformUrl = (url) => {
+      const urlParts = url.split("/upload/");
+      const transformation = "c_thumb,g_north,h_250,w_250,f_jpg";
+      return `${urlParts[0]}/upload/${transformation}/${urlParts[1]}`;
+    };
+
     //db ke andar entry save karni hai
     const fileData = await Upload.create({
       userId: req.user._id,
       name,
       tags,
       email,
-      previewImg: response.secure_url, //ye url jab ham cloudinary ke response ko clg karenge to vaha se milega
+      asset_id: response.asset_id,
+      previewImg: transformUrl(response.secure_url), //ye url jab ham cloudinary ke response ko clg karenge to vaha se milega
       title,
       description,
     });
@@ -145,12 +152,15 @@ export const fileupload = async (req, res) => {
 export const getCardById = async (req, res) => {
   const { id } = req.params; // Get the note_id from the request params
 
+  const asset_id = id;
+  // console.log("assetid ye rahi:", asset_id);
+
   try {
     // Fetch the card from the database using the note_id
-    const card = await Upload.findById(id);
+    const card = await Upload.findOne({ asset_id });
 
     if (!card) {
-      return res.status(404).json({ message: "Card not found" });
+      return res.status(404).json({ message: "Card not found", data: `${id}` });
     }
 
     // Return the card data in the response

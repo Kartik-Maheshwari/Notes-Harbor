@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { AiOutlineUpload, AiOutlineInfoCircle } from "react-icons/ai";
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
-import 'react-toastify/dist/ReactToastify.css';
+import "react-toastify/dist/ReactToastify.css";
 
 const DocumentUpload = () => {
   const [selectedFile, setSelectedFile] = useState(null);
@@ -137,14 +137,21 @@ const DocumentUpload = () => {
             id="fileUpload"
             onChange={handleFileChange}
             accept=".pdf,.docx,.ppt"
-            style={{ display: 'none' }}
+            style={{ display: "none" }}
           />
           <button
             type="button"
             className="px-4 py-2 rounded-md bg-blue-500 text-white hover:bg-blue-700 focus:outline-none disabled:bg-gray-400 disabled:cursor-not-allowed flex items-center"
             onClick={() => document.getElementById("fileUpload").click()}
           >
-            {loading ? "Uploading..." : <><AiOutlineUpload className="mr-2" /> {selectedFile ? "Change File" : "Choose File "}</>}
+            {loading ? (
+              "Uploading..."
+            ) : (
+              <>
+                <AiOutlineUpload className="mr-2" />{" "}
+                {selectedFile ? "Change File" : "Choose File "}
+              </>
+            )}
           </button>
           {selectedFile && (
             <div className="text-base text-gray-700">
@@ -229,14 +236,14 @@ const DocumentUpload = () => {
             />
           </div>
 
-          <div className="text-base text-gray-700">
+          {/* <div className="text-base text-gray-700">
             Sample Data:
             <br />
             Title: Sample Document
             <br />
             Description: Lorem ipsum dolor sit amet, consectetur adipiscing
             elit.
-          </div>
+          </div> */}
 
           <button
             type="submit"

@@ -133,7 +133,7 @@ const MainPage = () => {
     };
 
     fetchUploads();
-  }, []);
+  }, [isModalOpen]);
 
   const handleFilterChange = (event) => {
     setSelectedFilter(event.target.value);

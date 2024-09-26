@@ -13,6 +13,7 @@ const uploadSchema = new mongoose.Schema({
   tags: {
     type: String,
   },
+  asset_id: { type: String },
   title: { type: String, required: true },
   description: { type: String, required: true },
   previewImg: { type: String, required: true },
