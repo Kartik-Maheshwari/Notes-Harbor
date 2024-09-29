@@ -20,6 +20,9 @@ const uploadSchema = new mongoose.Schema({
   createdAt: { type: Date, default: Date.now },
   subjectName: { type: String },
   semester: { type: String },
+  year: { type: Number },
+  rating: { type: Number, default: 0 },
+  isMiscellaneous: { type: Boolean, default: false },
 });
 
 const Upload = mongoose.model("Upload", uploadSchema);

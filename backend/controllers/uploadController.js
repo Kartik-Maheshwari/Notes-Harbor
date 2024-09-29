@@ -78,7 +78,17 @@ async function uploadFileToCloudinary(file, folder, title, metadata = {}) {
 export const fileupload = async (req, res) => {
   try {
     //data fetch
-    const { name, tags, email, title, description } = req.body;
+    const {
+      name,
+      tags,
+      email,
+      title,
+      description,
+      year,
+      semester,
+      isMiscellaneous,
+      subjectName,
+    } = req.body;
     console.log(name, tags, email);
 
     const file = req.files.imageFile;
@@ -128,6 +138,10 @@ export const fileupload = async (req, res) => {
       asset_id: response.asset_id,
       previewImg: transformUrl(response.secure_url), //ye url jab ham cloudinary ke response ko clg karenge to vaha se milega
       title,
+      year,
+      subjectName,
+      semester,
+      isMiscellaneous,
       description,
     });
 

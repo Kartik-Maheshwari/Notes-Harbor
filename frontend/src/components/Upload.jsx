@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { AiOutlineUpload, AiOutlineInfoCircle } from "react-icons/ai";
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
@@ -11,6 +11,9 @@ const DocumentUpload = () => {
   const [profileData, setProfileData] = useState(null);
   const [loading, setLoading] = useState(false);
 
+  const [yearOptions] = useState([1, 2, 3, 4]);
+  const [semesterOptions, setSemesterOptions] = useState([]);
+
   const [formData, setFormData] = useState({
     userId: "",
     name: "",
@@ -20,9 +23,13 @@ const DocumentUpload = () => {
     description: "",
     previewImage: "",
     subjectName: "",
+    year: "",
     semester: "",
-    // Add other relevant details here (e.g., keywords, tags)
+    isMiscellaneous: false,
   });
+
+  const [isMiscellaneous, setIsMiscellaneous] = useState(false);
+  const contentRef = useRef(null); // Ref for the collapsible content section
 
   const fetchProfileData = async () => {
     try {
@@ -55,13 +62,33 @@ const DocumentUpload = () => {
   const isFileTypeValid = () => ["pdf", "docx", "ppt"].includes(fileType);
 
   const handleChange = (event) => {
+    const { name, value } = event.target;
     setFormData({
       ...formData,
-      userId: profileData._id,
-      name: profileData.firstname,
-      email: profileData.email,
-      [event.target.name]: event.target.value,
+      userId: profileData?._id,
+      name: profileData?.firstname,
+      email: profileData?.email,
+      [name]: value,
     });
+
+    if (name === "year") {
+      const selectedYear = parseInt(value);
+      const semesters =
+        selectedYear === 1
+          ? [1, 2]
+          : selectedYear === 2
+          ? [3, 4]
+          : selectedYear === 3
+          ? [5, 6]
+          : [7, 8];
+      setSemesterOptions(semesters);
+      setFormData((prevData) => ({ ...prevData, semester: "" }));
+    }
+  };
+
+  const handleMiscellaneousChange = (event) => {
+    const { value } = event.target;
+    setIsMiscellaneous(value === "miscellaneous");
   };
 
   const handleSubmit = async (event) => {
@@ -81,9 +108,10 @@ const DocumentUpload = () => {
       data.append("userId", profileData._id);
       data.append("title", formData.title);
       data.append("description", formData.description);
-      data.append("authoredBy", formData.authoredBy);
       data.append("subjectName", formData.subjectName);
-      data.append("semester", formData.semester);
+      data.append("year", isMiscellaneous ? "" : formData.year);
+      data.append("semester", isMiscellaneous ? "" : formData.semester);
+      data.append("isMiscellaneous", formData.isMiscellaneous);
       data.append("imageFile", selectedFile);
 
       const token = localStorage.getItem("token");
@@ -110,9 +138,10 @@ const DocumentUpload = () => {
         title: "",
         description: "",
         previewImage: "",
-        authoredBy: "",
         subjectName: "",
-        semester: "" /* reset other details */,
+        year: "",
+        semester: "",
+        isMiscellaneous: false,
       });
     } catch (error) {
       setLoading(false);
@@ -120,6 +149,15 @@ const DocumentUpload = () => {
       toast.error("Upload failed. Please try again.");
     }
   };
+
+  useEffect(() => {
+    if (contentRef.current) {
+      // Recalculate height dynamically when isMiscellaneous changes
+      contentRef.current.style.height = isMiscellaneous
+        ? "0px"
+        : `${contentRef.current.scrollHeight}px`;
+    }
+  }, [isMiscellaneous]);
 
   return (
     <div className="bg-white rounded-lg shadow-lg overflow-hidden transition duration-200 ease-in-out transform hover:scale-103 max-w-lg mx-auto mt-10">
@@ -219,39 +257,113 @@ const DocumentUpload = () => {
           </div>
 
           <div className="space-y-2">
-            <label
-              htmlFor="semester"
-              className="block text-base font-medium text-gray-700"
-            >
-              Semester
+            <label className="block text-base font-medium text-gray-700">
+              Is this a miscellaneous note?
             </label>
-            <input
-              type="text"
-              id="semester"
-              name="semester"
-              className="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:border-blue-500"
-              value={formData.semester}
-              onChange={handleChange}
-              required
-            />
+            <div className="flex items-center space-x-4">
+              <label className="flex items-center">
+                <input
+                  type="radio"
+                  name="noteType"
+                  value="miscellaneous"
+                  checked={isMiscellaneous}
+                  onChange={handleMiscellaneousChange}
+                  className="form-radio h-4 w-4 text-blue-600"
+                />
+                <span className="ml-2">Yes</span>
+              </label>
+
+              <label className="flex items-center">
+                <input
+                  type="radio"
+                  name="noteType"
+                  value="non-miscellaneous"
+                  checked={!isMiscellaneous}
+                  onChange={handleMiscellaneousChange}
+                  className="form-radio h-4 w-4 text-blue-600"
+                />
+                <span className="ml-2">No</span>
+              </label>
+            </div>
           </div>
 
-          {/* <div className="text-base text-gray-700">
-            Sample Data:
-            <br />
-            Title: Sample Document
-            <br />
-            Description: Lorem ipsum dolor sit amet, consectetur adipiscing
-            elit.
-          </div> */}
-
-          <button
-            type="submit"
-            className="w-full px-4 py-2 rounded-md bg-blue-500 text-white hover:bg-blue-700 focus:outline-none"
-            disabled={loading}
+          {/* Collapsible Section */}
+          <div
+            ref={contentRef}
+            className={`transition-all duration-300 ease-in-out overflow-hidden`}
+            style={{
+              height: isMiscellaneous
+                ? "0px"
+                : `${contentRef.current?.scrollHeight}px`,
+              opacity: isMiscellaneous ? 0 : 1,
+            }}
           >
-            {loading ? "Uploading..." : "Submit"}
-          </button>
+            {!isMiscellaneous && (
+              <>
+                <div className="space-y-2">
+                  <label
+                    htmlFor="year"
+                    className="block text-base font-medium text-gray-700"
+                  >
+                    Year
+                  </label>
+                  <select
+                    id="year"
+                    name="year"
+                    className="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:border-blue-500"
+                    value={formData.year}
+                    onChange={handleChange}
+                    required
+                  >
+                    <option value="" disabled>
+                      Select Year
+                    </option>
+                    {yearOptions.map((year) => (
+                      <option key={year} value={year}>
+                        {year}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="space-y-2">
+                  <label
+                    htmlFor="semester"
+                    className="block text-base font-medium text-gray-700"
+                  >
+                    Semester
+                  </label>
+                  <select
+                    id="semester"
+                    name="semester"
+                    className="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:border-blue-500"
+                    value={formData.semester}
+                    onChange={handleChange}
+                    required
+                  >
+                    <option value="" disabled>
+                      Select Semester
+                    </option>
+                    {semesterOptions.map((semester) => (
+                      <option key={semester} value={semester}>
+                        {semester}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </>
+            )}
+          </div>
+
+          <div className="flex justify-center">
+            <button
+              type="submit"
+              className="px-6 py-2 rounded-md bg-blue-500 text-white hover:bg-blue-700 focus:outline-none disabled:bg-gray-400 disabled:cursor-not-allowed"
+              disabled={loading}
+            >
+              {loading ? "Uploading..." : "Upload Notes"}
+            </button>
+          </div>
         </form>
       </div>
     </div>
