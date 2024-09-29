@@ -20,16 +20,13 @@ export const getUploadsByUser = async (req, res) => {
 
 export const getAllUploads = async (req, res) => {
   try {
-    const resources = await cloudinary.api.resources({
-      type: "upload", // Specifies that we're fetching uploaded files
-      prefix: "Codehelp",
-      max_results: 100, // Adjust the number as needed
-    });
+    // Fetch all uploads from the database
+    const uploads = await Upload.find().populate("userId", "name email"); // Optionally populate userId with relevant fields
 
-    res.status(200).json(resources.resources);
+    res.status(200).json(uploads); // Return the fetched uploads
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: "Failed to fetch resources", error });
+    res.status(500).json({ message: "Failed to fetch uploads", error });
   }
 };
 
@@ -138,6 +135,7 @@ export const fileupload = async (req, res) => {
       asset_id: response.asset_id,
       previewImg: transformUrl(response.secure_url), //ye url jab ham cloudinary ke response ko clg karenge to vaha se milega
       title,
+      secure_url: response.secure_url,
       year,
       subjectName,
       semester,

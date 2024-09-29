@@ -18,7 +18,7 @@ const Cards = ({
       {uploads.map((upload, index) => (
         <Card
           key={index}
-          title={upload.public_id.replace("Codehelp/", "") + ".pdf"}
+          title={upload.title + ".pdf"}
           image={transformUrl(upload.secure_url)}
           description={upload.description}
           fileUrl={upload.secure_url}

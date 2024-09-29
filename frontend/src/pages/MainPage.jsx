@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { FaFilter } from "react-icons/fa6";
-import Card from "../components/Card.jsx";
 import Cards from "../components/Cards.jsx";
-import SingleCard from "../components/SingleCard.jsx";
 import UploadBox from "../components/Upload.jsx";
 import Modal from "../components/Modal.jsx";
 import axios from "axios";
@@ -20,8 +18,6 @@ const MainPage = () => {
   const [selectedSemester, setSelectedSemester] = useState("");
   const [selectedSubject, setSelectedSubject] = useState("");
   const [profileData, setProfileData] = useState(null);
-  const [followersCount, setFollowersCount] = useState(0);
-  const [followingCount, setFollowingCount] = useState(0);
   const [uploads, setUploads] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 

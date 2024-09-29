@@ -17,6 +17,7 @@ const uploadSchema = new mongoose.Schema({
   title: { type: String, required: true },
   description: { type: String, required: true },
   previewImg: { type: String, required: true },
+  secure_url: { type: String },
   createdAt: { type: Date, default: Date.now },
   subjectName: { type: String },
   semester: { type: String },
