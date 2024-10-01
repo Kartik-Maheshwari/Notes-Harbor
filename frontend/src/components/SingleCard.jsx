@@ -1,12 +1,8 @@
-import React, { useState, useEffect } from "react";
-import {
-  AiOutlineHeart,
-  AiOutlineComment,
-  AiOutlineShareAlt,
-  AiOutlineHome,
-} from "react-icons/ai";
-import { useParams, useNavigate } from "react-router-dom";
-import axios from "axios";
+import React, { useState, useEffect } from 'react';
+import { AiOutlineHeart, AiOutlineComment, AiOutlineShareAlt, AiOutlineHome } from 'react-icons/ai';
+import { useParams, useNavigate } from 'react-router-dom';
+import PropTypes from 'prop-types';
+import axios from 'axios';
 
 const SingleCard = () => {
   const { id: asset_id } = useParams(); // Get the asset_id from the URL parameters
@@ -56,28 +52,15 @@ const SingleCard = () => {
   return (
     <div className="bg-white rounded-lg shadow-md overflow-hidden transition duration-300 ease-in-out transform hover:scale-105 hover:shadow-xl border-2 border-transparent m-4 w-80 h-80">
       <div className="p-4 space-y-3">
-        <button
-          onClick={onBack}
-          className="text-gray-700 hover:bg-gray-200 border border-gray-300 rounded px-3 py-1 transition-colors duration-300 flex items-center"
-        >
+        <button onClick={onBack} className="text-gray-700 hover:bg-gray-200 border border-gray-300 rounded px-3 py-1 transition-colors duration-300 flex items-center">
           <AiOutlineHome className="text-xl" />
         </button>
-        <h2 className="text-lg font-bold text-center">
-          {cardData.title || "Loading..."}
-        </h2>
-        <img
-          className="w-full h-32 object-cover rounded-lg"
-          src={cardData.previewImg || "https://via.placeholder.com/600x400"}
-          alt="Post"
-        />
+        <h2 className="text-lg font-bold text-center">{cardData.title}</h2>
+        <img className="w-full h-32 object-cover rounded-lg" src={cardData.image} alt="Post" />
         <div className="flex items-center justify-between mt-2">
           <div className="flex items-center space-x-2 text-gray-500">
             <button type="button" onClick={toggleLike}>
-              <AiOutlineHeart
-                className={`text-xl ${
-                  liked ? "text-red-500" : "text-gray-500"
-                }`}
-              />
+              <AiOutlineHeart className={`text-xl ${liked ? 'text-red-500' : 'text-gray-500'}`} />
             </button>
             <button type="button" onClick={() => setShowCommentDialog(true)}>
               <AiOutlineComment className="text-xl" />
@@ -88,20 +71,14 @@ const SingleCard = () => {
           </div>
           <div className="text-sm text-gray-600">
             <p>Semester: {cardData.semester}</p>
-            <p>Uploaded by: {cardData.email || cardData.name || "Unknown"}</p>
+            <p>Uploaded by: {cardData.uploader}</p>
           </div>
         </div>
         <p className="text-base text-gray-700">
-          {showMore
-            ? cardData.description
-            : `${cardData.description?.substring(0, 100)}...`}
+          {showMore ? cardData.description : `${cardData.description?.substring(0, 100)}...`}
           {cardData.description?.length > 100 && (
-            <button
-              type="button"
-              onClick={handleShowMore}
-              className="text-blue-500 ml-2"
-            >
-              {showMore ? "Show Less" : "See More"}
+            <button type="button" onClick={handleShowMore} className="text-blue-500 ml-2">
+              {showMore ? 'Show Less' : 'See More'}
             </button>
           )}
         </p>
@@ -120,18 +97,8 @@ const SingleCard = () => {
               onChange={(e) => setCommentText(e.target.value)}
             ></textarea>
             <div className="flex justify-end mt-4">
-              <button
-                className="bg-blue-500 text-white px-4 py-2 rounded"
-                onClick={submitComment}
-              >
-                Submit
-              </button>
-              <button
-                className="ml-2 text-gray-500"
-                onClick={() => setShowCommentDialog(false)}
-              >
-                Cancel
-              </button>
+              <button className="bg-blue-500 text-white px-4 py-2 rounded" onClick={submitComment}>Submit</button>
+              <button className="ml-2 text-gray-500" onClick={() => setShowCommentDialog(false)}>Cancel</button>
             </div>
           </div>
         </div>
@@ -152,6 +119,14 @@ const SingleCard = () => {
       </div>
     </div>
   );
+};
+
+SingleCard.propTypes = {
+  profilePic: PropTypes.string,
+  name: PropTypes.string,
+  image: PropTypes.string,
+  title: PropTypes.string,
+  description: PropTypes.string,
 };
 
 export default SingleCard;

@@ -3,11 +3,11 @@ import { FiEye, FiEyeOff } from "react-icons/fi";
 import { useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
 import { useDispatch } from "react-redux";
-import { login, logout } from "../store/authSlice"; // Adjust path if needed
+import { login, logout } from "../store/authSlice";
 import { toast, ToastContainer } from "react-toastify";
-import 'react-toastify/dist/ReactToastify.css';
+import "react-toastify/dist/ReactToastify.css";
 
-const Login = () => {
+const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -19,15 +19,14 @@ const Login = () => {
 
   const message = location.state?.message || "";
 
-  // Function to handle login
   const handleLogin = async (event) => {
     setError("");
     setSuccess("");
     event.preventDefault();
     try {
       const response = await axios.post("http://localhost:3000/v1/auth/login", {
-        email: email,
-        password: password,
+        email,
+        password,
       });
 
       if (response.data.success) {
@@ -53,81 +52,104 @@ const Login = () => {
   };
 
   useEffect(() => {
-    // Set session active on load
-    window.onload = function () {
-      window.localStorage.isMySessionActive = "true";
+    const handleTabClose = () => {
+      localStorage.removeItem("token");
+      dispatch(logout());
     };
+    window.addEventListener("beforeunload", handleTabClose);
 
-    // Set session inactive on unload
-    window.onbeforeunload = function () {
-      window.onunload = function () {
-        window.localStorage.isMySessionActive = "false";
-        dispatch(logout());
-        localStorage.removeItem("token");
-      };
-      return undefined;
-    };
-
-    // Cleanup function to remove event listeners
     return () => {
-      window.onbeforeunload = null;
-      window.onunload = null;
+      window.removeEventListener("beforeunload", handleTabClose);
     };
   }, [dispatch]);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-dark-blue">
-      <ToastContainer />
-      <div className="w-96 bg-white shadow-md rounded p-8 animate-fadeIn">
-        <h1 className="text-3xl font-bold mb-6 text-center text-dark-blue">LOGIN</h1>
-        {message && (
-          <div className="text-green-500 text-sm mb-4">{message}</div>
-        )}
-        <form onSubmit={handleLogin}>
-          <input
-            className="w-full bg-gray-100 border border-gray-300 rounded px-3 py-2 mb-4 text-dark-blue"
-            placeholder="Email"
-            onChange={(e) => setEmail(e.target.value)}
-            type="email"
-            required
-          />
-          <div className="relative">
+    <div className=" m-10 border-4 border rounded-lg   max-w-500 grid  gap-5 grid-cols-1 md:grid-cols-2 p-10 overflow-y-hidden">
+
+      {/* Left Section: Image */}
+      <div className="flex items-center justify-center bg-white">
+        <img src="/image/login.png" alt="Login Illustration" className="w-3/4" />
+      </div>
+
+      {/* Right Section: Login Form */}
+      <div className="flex items-center justify-center bg-blue-600   rounded-lg p-">
+        <div className="w-3/4 max-w-md">
+          <h1 className="text-white text-3xl font-semibold mb-4">Welcome Back!</h1>
+          <p className="text-white mb-6">
+            Don't have an account yet?{" "}
+            <span
+              className="underline cursor-pointer"
+              onClick={() => navigate("/signup")}
+            >
+              Sign Up
+            </span>
+          </p>
+
+          {message && <div className="text-green-500 text-sm mb-4">{message}</div>}
+
+          <form onSubmit={handleLogin}>
+            {/* Email Field */}
             <input
-              className="w-full bg-gray-100 border border-gray-300 rounded px-3 py-2 mb-4 pr-10 text-dark-blue"
-              placeholder="Password"
-              onChange={(e) => setPassword(e.target.value)}
-              type={showPassword ? "text" : "password"}
+              type="email"
+              placeholder="Username"
+              className="w-full px-4 py-2 mb-4 text-lg border-2 border-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300"
+              onChange={(e) => setEmail(e.target.value)}
               required
             />
-            <div
-              className="absolute inset-y-0 right-0 flex items-center mb-5 pr-3 cursor-pointer"
-              onClick={() => setShowPassword(!showPassword)}
-            >
-              {showPassword ? <FiEyeOff /> : <FiEye />}
+
+            {/* Password Field */}
+            <div className="relative">
+              <input
+                type={showPassword ? "text" : "password"}
+                placeholder="Password"
+                className="w-full px-4 py-2 mb-4 text-lg border-2 border-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300"
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
+              <div
+                className="absolute inset-y-0 right-0 flex items-center pr-3 cursor-pointer"
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                {showPassword ? <FiEyeOff /> : <FiEye />}
+              </div>
             </div>
-          </div>
-          {error && <div className="text-red-500 text-sm mb-4">{error}</div>}
-          {success && (
-            <div className="text-green-500 text-sm mb-4">{success}</div>
-          )}
-          <div className="text-xs text-gray-500 mb-4">
-            By logging in, I consent to the processing of my personal data in
-            accordance with the{" "}
-            <a href="/privacy-policy" className="text-blue-500 underline">
-              PRIVACY POLICY
+
+            {/* Keep Me Logged In & Forgot Password */}
+            <div className="flex items-center justify-between mb-6">
+              <label className="flex items-center text-white">
+                <input type="checkbox" className="mr-2" />
+                Keep me logged in
+              </label>
+              <a href="#" className="text-white underline">
+                Forgot Password?
+              </a>
+            </div>
+
+            {error && <div className="text-red-500 text-sm mb-4">{error}</div>}
+            {success && <div className="text-green-500 text-sm mb-4">{success}</div>}
+
+            {/* Login Button */}
+            <button
+              className="w-full px-4 py-2 bg-blue-500 hover:bg-blue-700 text-white font-semibold text-lg rounded-lg transition duration-300 ease-in-out transform hover:scale-105"
+              type="submit"
+              disabled={!email || !password}
+            >
+              Login
+            </button>
+          </form>
+
+          {/* Privacy Policy */}
+          <div className="text-center text-xs text-white mt-4">
+            <a href="/privacy-policy" className="underline">
+              Privacy Policy
             </a>
           </div>
-          <button
-            className="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition duration-300 ease-in-out transform hover:scale-105"
-            type="submit"
-            disabled={!email || !password}
-          >
-            LOGIN
-          </button>
-        </form>
+        </div>
       </div>
+
+      <ToastContainer />
     </div>
   );
 };
 
-export default Login;
+export default LoginPage;

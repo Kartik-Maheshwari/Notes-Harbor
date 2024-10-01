@@ -54,7 +54,7 @@ export const signup = async (req, res) => {
     console.log(error);
     return res.status(500).json({
       success: false,
-      message: "User cannot to registered",
+      message: "Unable to create profile",
     });
   }
 };
