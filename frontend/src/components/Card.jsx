@@ -1,11 +1,17 @@
 import React, { useState } from "react";
-import { AiOutlineDownload, AiOutlineEye, AiOutlineComment, AiOutlineMore, AiOutlineHeart } from "react-icons/ai";
+import {
+  AiOutlineDownload,
+  AiOutlineEye,
+  AiOutlineComment,
+  AiOutlineMore,
+  AiOutlineHeart,
+} from "react-icons/ai";
 import { FaStar } from "react-icons/fa";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 
-const Card = ({ title, image, description, fileUrl, note_id }) => {
+const Card = ({ title, image, description, fileUrl, note_id, name }) => {
   const [isLiked, setIsLiked] = useState(false); // Track like state
   const [showDropdown, setShowDropdown] = useState(false); // Track dropdown state
   const [showCommentDialog, setShowCommentDialog] = useState(false); // Track comment dialog state
@@ -43,16 +49,24 @@ const Card = ({ title, image, description, fileUrl, note_id }) => {
         <div className="flex items-center">
           <div className="w-10 h-10 rounded-full bg-gray-300 mr-4"></div>
           <div className="text-gray-800 font-semibold">{title}</div>
-          <sub className="text-xs text-gray-500 ml-1">uploaded by</sub>
+          <sub className="text-xs text-gray-500 ml-1">uploaded by {name}</sub>
         </div>
-        <button className="focus:outline-none hover:bg-gray-300" onClick={handleDropdownClick}>
+        <button
+          className="focus:outline-none hover:bg-gray-300 rounded-full text-3xl"
+          onClick={handleDropdownClick}
+        >
           <AiOutlineMore />
         </button>
         {showDropdown && (
           <ul className="absolute top-full right-0 bg-white rounded-lg shadow-md py-2">
-            <li className="px-4 py-2 hover:bg-gray-100"><Link to={`/singlecard/${note_id}`} className="block w-full text-left">
-    Detailed View
-  </Link></li>
+            <li className="px-4 py-2 hover:bg-gray-100">
+              <Link
+                to={`/singlecard/${note_id}`}
+                className="block w-full text-left"
+              >
+                Detailed View
+              </Link>
+            </li>
             <li className="px-4 py-2 hover:bg-gray-100">Preview</li>
             <li className="px-4 py-2 hover:bg-gray-100">
               <button onClick={handleDownloadClick}>Download</button>
@@ -60,7 +74,14 @@ const Card = ({ title, image, description, fileUrl, note_id }) => {
           </ul>
         )}
       </div>
-      <div className="w-full h-56 object-cover object-center" style={{ backgroundImage: `url(${image || "https://via.placeholder.com/300x200"})` }}>
+      <div
+        className="w-full h-56 object-cover object-center"
+        style={{
+          backgroundImage: `url(${
+            image || "https://via.placeholder.com/300x200"
+          })`,
+        }}
+      >
         {/* Image displayed using background-image for better responsiveness */}
       </div>
       <div className="p-6">
@@ -69,9 +90,14 @@ const Card = ({ title, image, description, fileUrl, note_id }) => {
       <div className="flex justify-between items-center p-4 border-t border-gray-200">
         <div className="flex items-center space-x-4">
           <button onClick={handleLikeClick} className="text-gray-600">
-            <AiOutlineHeart className={`text-xl ${isLiked ? 'text-red-500' : ''}`} />
+            <AiOutlineHeart
+              className={`text-xl ${isLiked ? "text-red-500" : ""}`}
+            />
           </button>
-          <button onClick={() => setShowCommentDialog(true)} className="text-gray-600">
+          <button
+            onClick={() => setShowCommentDialog(true)}
+            className="text-gray-600"
+          >
             <AiOutlineComment className="text-xl" />
           </button>
           <button className="text-gray-600">
@@ -103,8 +129,18 @@ const Card = ({ title, image, description, fileUrl, note_id }) => {
               onChange={(e) => setCommentText(e.target.value)}
             ></textarea>
             <div className="flex justify-end mt-4">
-              <button className="bg-blue-500 text-white px-4 py-2 rounded" onClick={submitComment}>Submit</button>
-              <button className="ml-2 text-gray-500" onClick={() => setShowCommentDialog(false)}>Cancel</button>
+              <button
+                className="bg-blue-500 text-white px-4 py-2 rounded"
+                onClick={submitComment}
+              >
+                Submit
+              </button>
+              <button
+                className="ml-2 text-gray-500"
+                onClick={() => setShowCommentDialog(false)}
+              >
+                Cancel
+              </button>
             </div>
           </div>
         </div>

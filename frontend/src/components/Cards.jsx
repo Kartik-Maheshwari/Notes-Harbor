@@ -20,7 +20,7 @@ const Cards = ({
         // Safely access public_id
         const publicId = upload.public_id || "";
         const fileName = publicId.replace("Codehelp/", "") + ".pdf"; // Fallback to an empty string if undefined
-        
+
         return (
           <Card
             key={index}
@@ -30,6 +30,7 @@ const Cards = ({
             fileUrl={upload.secure_url}
             note_id={upload.asset_id}
             style={{ width: "300px", height: "400px" }} // Adjust as needed
+            name={upload.name}
           />
         );
       })}
