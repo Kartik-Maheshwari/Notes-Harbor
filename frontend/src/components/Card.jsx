@@ -1,8 +1,6 @@
 import React, { useState } from "react";
 import {
   AiOutlineDownload,
-  AiOutlineEye,
-  AiOutlineComment,
   AiOutlineMore,
   AiOutlineHeart,
 } from "react-icons/ai";
@@ -13,11 +11,11 @@ import { toast } from "react-toastify";
 import { IoMdShare } from "react-icons/io";
 
 const Card = ({ title, image, description, fileUrl, note_id, name }) => {
-  const [isLiked, setIsLiked] = useState(false); // Track like state
-  const [showDropdown, setShowDropdown] = useState(false); // Track dropdown state
-  const [showCommentDialog, setShowCommentDialog] = useState(false); // Track comment dialog state
-  const [comments, setComments] = useState([]); // Store comments
-  const [commentText, setCommentText] = useState(""); // Hold comment text
+  const [isLiked, setIsLiked] = useState(false);
+  const [showDropdown, setShowDropdown] = useState(false);
+  const [showCommentDialog, setShowCommentDialog] = useState(false);
+  const [comments, setComments] = useState([]);
+  const [commentText, setCommentText] = useState("");
   const downloadurl = fileUrl.replace("/upload/", "/upload/fl_attachment/");
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
 
@@ -32,119 +30,55 @@ const Card = ({ title, image, description, fileUrl, note_id, name }) => {
     }
   };
 
-  const handleDropdownClick = () => {
-    setShowDropdown(!showDropdown);
-  };
-
   const submitComment = () => {
     if (commentText.trim()) {
       setComments([...comments, commentText]);
       setCommentText("");
-      setShowCommentDialog(false); // Assuming this should be closed after submission
+      setShowCommentDialog(false);
     }
   };
 
   return (
-    <div className="flex flex-col items-center justify-center bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition duration-300 ease-in-out transform hover:-translate-y-1 hover:scale-105 w-64 m-4">
-      <div className="relative flex justify-end items-center p-2">
-        <div className="flex items-center">
+    <div className="bg-white rounded-lg shadow-md hover:shadow-lg transition duration-300 ease-in-out transform hover:-translate-y-1 hover:scale-105 w-64 m-4">
+      {/* Main wrapper */}
+      <div className="flex flex-col">
+        {/* First div: Preview Image */}
+        <div
+          className="w-full h-56 bg-cover bg-center"
+          style={{
+            backgroundImage: `url(${
+              image || "https://via.placeholder.com/300x200"
+            })`,
+          }}
+        ></div>
+
+        {/* Second div: Title and Uploader Name */}
+        <div className="p-4">
           <div className="text-gray-800 font-semibold">{title}</div>
-          <sub className="text-xs text-gray-500 ml-1">uploaded by {name}</sub>
+          <sub className="text-xs text-gray-500">uploaded by {name}</sub>
         </div>
-        <button
-          className="focus:outline-none hover:bg-gray-300 rounded-full text-3xl"
-          onClick={handleDropdownClick}
-        >
-          <AiOutlineMore />
-        </button>
-        {showDropdown && (
-          <ul className="absolute top-full right-0 bg-white rounded-lg shadow-md py-2">
-            <li className="px-4 py-2 hover:bg-gray-100">
-              <Link
-                to={`/singlecard/${note_id}`}
-                className="block w-full text-left"
-              >
-                Detailed View
-              </Link>
-            </li>
-            <li className="px-4 py-2 hover:bg-gray-100">Preview</li>
-            <li className="px-4 py-2 hover:bg-gray-100">
-              <button onClick={handleDownloadClick}>Download</button>
-            </li>
-          </ul>
-        )}
-      </div>
-      <div
-        className="w-full h-56 object-cover object-center"
-        style={{
-          backgroundImage: `url(${
-            image || "https://via.placeholder.com/300x200"
-          })`,
-        }}
-      >
-        {/* Image displayed using background-image for better responsiveness */}
-      </div>
-      <div className="p-6">
-        <p className="mt-2 text-gray-600">{description}</p>
-      </div>
-      <div className="flex justify-between items-center p-4 border-t border-gray-200">
-        <div className="flex items-center space-x-4">
-          <button onClick={handleLikeClick} className="text-gray-600">
-            <AiOutlineHeart
-              className={`text-xl ${isLiked ? "text-red-500" : ""}`}
-            />
-          </button>
-          <button
-            onClick={() => setShowCommentDialog(true)}
-            className="text-gray-600"
+
+        {/* Third div: Buttons (Download & View) */}
+        <div className="flex justify-between items-center p-4">
+          <a
+            href={downloadurl}
+            onClick={handleDownloadClick}
+            className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition duration-200"
+            download
           >
-            <AiOutlineComment className="text-xl" />
-          </button>
-          <button className="text-gray-600">
-            <IoMdShare className="text-xl" />
-          </button>
+            Download
+          </a>
+          <Link
+            to={`/singlecard/${note_id}`}
+            className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 transition duration-200"
+          >
+            View
+          </Link>
         </div>
       </div>
-      <div className="p-4">
-        <h3 className="font-bold">Comments:</h3>
-        {comments.length > 0 ? (
-          comments.map((comment, index) => (
-            <div key={index} className="mt-2 text-gray-700">
-              {comment}
-            </div>
-          ))
-        ) : (
-          <p className="text-gray-500">No comments yet.</p>
-        )}
-      </div>
-      {showCommentDialog && (
-        <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center">
-          <div className="bg-white rounded-lg p-6 shadow-lg">
-            <h2 className="text-xl font-bold mb-4">Add a Comment</h2>
-            <textarea
-              className="w-full border border-gray-300 rounded p-2"
-              rows="4"
-              placeholder="Write your comment..."
-              value={commentText}
-              onChange={(e) => setCommentText(e.target.value)}
-            ></textarea>
-            <div className="flex justify-end mt-4">
-              <button
-                className="bg-blue-500 text-white px-4 py-2 rounded"
-                onClick={submitComment}
-              >
-                Submit
-              </button>
-              <button
-                className="ml-2 text-gray-500"
-                onClick={() => setShowCommentDialog(false)}
-              >
-                Cancel
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+
+     
+      
     </div>
   );
 };

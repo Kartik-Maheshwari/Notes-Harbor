@@ -1,112 +1,47 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { FaFilter } from "react-icons/fa6";
+import { FaFilter } from "react-icons/fa";
 import Cards from "../components/Cards.jsx";
 import UploadBox from "../components/Upload.jsx";
 import Modal from "../components/Modal.jsx";
 import axios from "axios";
-import { login, logout } from "../store/authSlice.js";
-
 import { toast, ToastContainer } from "react-toastify";
-import { jwtDecode } from "jwt-decode";
+import { Range } from "react-range"; // for the rating slider
 
 const MainPage = () => {
   const dispatch = useDispatch();
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
   const [selectedFilter, setSelectedFilter] = useState("all");
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedSemester, setSelectedSemester] = useState("");
   const [selectedSubject, setSelectedSubject] = useState("");
+  const [selectedSortOrder, setSelectedSortOrder] = useState("most-recent");
+  const [ratingRange, setRatingRange] = useState([0, 5]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [profileData, setProfileData] = useState(null);
   const [uploads, setUploads] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isMiscellaneous, setIsMiscellaneous] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const uploadsPerPage = 10;
 
   const subjectsBySemester = {
-    1: [
-      "Math 101",
-      "Physics 101",
-      "Chemistry 101",
-      "Biology 101",
-      "CS 101",
-      "English 101",
-    ],
-    2: [
-      "Math 102",
-      "Physics 102",
-      "Chemistry 102",
-      "Biology 102",
-      "CS 102",
-      "English 102",
-    ],
-    3: [
-      "Math 201",
-      "Physics 201",
-      "Chemistry 201",
-      "Biology 201",
-      "CS 201",
-      "English 201",
-    ],
-    4: [
-      "Math 202",
-      "Physics 202",
-      "Chemistry 202",
-      "Biology 202",
-      "CS 202",
-      "English 202",
-    ],
-    5: [
-      "Math 301",
-      "Physics 301",
-      "Chemistry 301",
-      "Biology 301",
-      "CS 301",
-      "English 301",
-    ],
-    6: [
-      "Math 302",
-      "Physics 302",
-      "Chemistry 302",
-      "Biology 302",
-      "CS 302",
-      "English 302",
-    ],
-    7: [
-      "Math 401",
-      "Physics 401",
-      "Chemistry 401",
-      "Biology 401",
-      "CS 401",
-      "English 401",
-    ],
-    8: [
-      "Math 402",
-      "Physics 402",
-      "Chemistry 402",
-      "Biology 402",
-      "CS 402",
-      "English 402",
-    ],
+    1: ["Math 101", "Physics 101", "Chemistry 101", "CS 101"],
+    2: ["Math 102", "Physics 102", "Chemistry 102", "CS 102"],
+    // Add other subjects...
   };
 
   useEffect(() => {
     const fetchProfileData = async () => {
       try {
         const token = localStorage.getItem("token");
-        const profileResponse = await axios.get(
-          "http://localhost:3000/v1/profile",
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+        const profileResponse = await axios.get("http://localhost:3000/v1/profile", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
         setProfileData(profileResponse.data);
-        console.log(profileResponse.data);
       } catch (error) {
         console.error("Failed to fetch profile data", error);
       }
     };
-
     if (isLoggedIn) {
       fetchProfileData();
     }
@@ -116,10 +51,7 @@ const MainPage = () => {
     const fetchUploads = async () => {
       setIsLoading(true);
       try {
-        const response = await axios.get(
-          "http://localhost:3000/v1/uploads/all"
-        );
-        console.log(response.data);
+        const response = await axios.get("http://localhost:3000/v1/uploads/all");
         setUploads(response.data);
       } catch (error) {
         console.error("Error fetching uploads:", error);
@@ -127,7 +59,6 @@ const MainPage = () => {
         setIsLoading(false);
       }
     };
-
     fetchUploads();
   }, [isModalOpen]);
 
@@ -144,6 +75,14 @@ const MainPage = () => {
     setSelectedSubject(event.target.value);
   };
 
+  const handleSortOrderChange = (event) => {
+    setSelectedSortOrder(event.target.value);
+  };
+
+  const handleRatingChange = (values) => {
+    setRatingRange(values);
+  };
+
   const openModal = () => {
     setIsModalOpen(true);
   };
@@ -152,128 +91,253 @@ const MainPage = () => {
     setIsModalOpen(false);
   };
 
-  const handleLogin = () => {
-    dispatch(login());
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
   };
 
-  const handleLogout = () => {
-    dispatch(logout());
+  // Filtering logic
+  const getFilteredUploads = () => {
+    let filteredUploads = [...uploads];
+
+    // Filter by Semester
+    if (selectedSemester) {
+      filteredUploads = filteredUploads.filter((upload) => upload.semester === selectedSemester);
+    }
+
+    // Filter by Subject
+    if (selectedSubject) {
+      filteredUploads = filteredUploads.filter((upload) => upload.subject === selectedSubject);
+    }
+
+    // Filter by Rating Range
+    filteredUploads = filteredUploads.filter(
+      (upload) => upload.rating >= ratingRange[0] && upload.rating <= ratingRange[1]
+    );
+
+    // Filter by Miscellaneous
+    if (isMiscellaneous) {
+      filteredUploads = filteredUploads.filter((upload) => upload.category === "Miscellaneous");
+    }
+
+    // Sort based on Sort Order (most-recent, least-recent, rating-high-low, rating-low-high)
+    if (selectedSortOrder === "most-recent") {
+      filteredUploads = filteredUploads.sort(
+        (a, b) => new Date(b.uploadDate) - new Date(a.uploadDate)
+      );
+    } else if (selectedSortOrder === "least-recent") {
+      filteredUploads = filteredUploads.sort(
+        (a, b) => new Date(a.uploadDate) - new Date(b.uploadDate)
+      );
+    } else if (selectedSortOrder === "rating-high-low") {
+      filteredUploads = filteredUploads.sort((a, b) => b.rating - a.rating);
+    } else if (selectedSortOrder === "rating-low-high") {
+      filteredUploads = filteredUploads.sort((a, b) => a.rating - b.rating);
+    }
+
+    // Pagination logic
+    const indexOfLastUpload = currentPage * uploadsPerPage;
+    const indexOfFirstUpload = indexOfLastUpload - uploadsPerPage;
+    return filteredUploads.slice(indexOfFirstUpload, indexOfLastUpload);
   };
+
+  const filteredUploads = getFilteredUploads();
+  const totalPages = Math.ceil(uploads.length / uploadsPerPage);
 
   return (
-    <div className="flex flex-col gap-4 mt-2">
-      <ToastContainer
-        position="top-left" // Set the position of the toast
-        autoClose={5000} // Auto close the toast after 5 seconds
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnHover
-      />
+    <div className="flex flex-col gap-4 mt-2 px-4">
+      <ToastContainer position="top-left" autoClose={5000} />
+      
+      {/* Profile Section */}
       {isLoggedIn && profileData && (
-        <div className="profile-section flex flex-col justify-center items-center md:flex-row md:justify-between md:items-center bg-slate-600 p-3 py-5 rounded-lg">
-          <img
-            src={profileData.profilePicture || "path/to/profile-picture.jpg"}
-            alt="Profile Picture"
-            className="profile-picture rounded-full h-16 w-16 border border-gray-300"
-          />
-          <div className="following text-white text-2xl">
-            Welcome <span className="font-bold">{profileData.firstname}</span>
-          </div>
-          <div className="profile-info flex flex-col items-center md:flex-row md:items-center gap-4 mt-4 md:mt-0">
-            <div className="followers text-white">
-              Followers:{" "}
-              <span className="font-bold">{profileData.followers.length}</span>
+        <div className="w-full bg-slate-600 p-6 rounded-lg mb-4">
+          <div className="flex flex-col items-center justify-between gap-4 sm:flex-row">
+            <img
+              src={profileData.profilePicture || "path/to/profile-picture.jpg"}
+              alt="Profile"
+              className="rounded-full h-16 w-16 border border-gray-300"
+            />
+            <div className="text-white text-2xl">
+              Welcome <span className="font-bold">{profileData.firstname}</span>
             </div>
-            <div className="following text-white">
-              Following:{" "}
-              <span className="font-bold">{profileData.followings.length}</span>
+            <div className="flex flex-col sm:flex-row items-center gap-4">
+              <div className="text-white">
+                Followers: <span className="font-bold">{profileData.followers.length}</span>
+              </div>
+              <div className="text-white">
+                Following: <span className="font-bold">{profileData.followings.length}</span>
+              </div>
+              <div className="text-white">
+                Total Notes Uploaded: <span className="font-bold">{profileData.notes.length}</span>
+              </div>
+              <button
+                className="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300"
+                onClick={openModal}
+              >
+                Upload
+              </button>
             </div>
-            <div className="following text-white">
-              Total Notes Uploaded:{" "}
-              <span className="font-bold">{profileData.notes.length}</span>
-            </div>
-            <button
-              className="profile-button px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300"
-              onClick={openModal}
-            >
-              Upload
-            </button>
           </div>
         </div>
       )}
 
-      <div className="filter-container flex flex-col justify-center items-center md:flex-row md:justify-end md:items-center space-x-2">
-        <div className="filter-dropdown flex items-center space-x-2">
-          <select
-            value={selectedFilter}
-            onChange={handleFilterChange}
-            className="filter-select px-3 py-2 rounded-md text-gray-700 border border-gray-300 focus:outline-none focus:ring-1 focus:ring-blue-500"
-          >
-            <option value="all">All</option>
-            <option value="most-rated">Most Rated</option>
-            <option value="latest">Latest</option>
-          </select>
-          <select
-            value={selectedSemester}
-            onChange={handleSemesterChange}
-            className="semester-select px-3 py-2 rounded-md text-gray-700 border border-gray-300 focus:outline-none focus:ring-1 focus:ring-blue-500"
-          >
-            <option value="">Select Semester</option>
-            {[...Array(8).keys()].map((semester) => (
-              <option key={semester + 1} value={semester + 1}>
-                Semester {semester + 1}
-              </option>
-            ))}
-          </select>
-          <select
-            value={selectedSubject}
-            onChange={handleSubjectChange}
-            className="subject-select px-3 py-2 rounded-md text-gray-700 border border-gray-300 focus:outline-none focus:ring-1 focus:ring-blue-500"
-            disabled={!selectedSemester}
-          >
-            <option value="">Select Subject</option>
-            {selectedSemester &&
-              subjectsBySemester[selectedSemester].map((subject, index) => (
-                <option key={index} value={subject}>
-                  {subject}
+      {/* Main Content Section */}
+      <div className="flex gap-4">
+        {/* Sidebar Filter */}
+        <div className="w-1/4 bg-gray-100 p-4 rounded-lg shadow-md">
+          <h2 className="text-lg font-semibold mb-4">Filters</h2>
+
+          {/* Filter by Semester */}
+          <div className="mb-4">
+            <label htmlFor="semester" className="block text-sm font-medium text-gray-700">
+              Semester
+            </label>
+            <select
+              id="semester"
+              value={selectedSemester}
+              onChange={handleSemesterChange}
+              className="w-full mt-1 p-2 border border-gray-300 rounded-md"
+            >
+              <option value="">All Semesters</option>
+              {[...Array(8).keys()].map((sem) => (
+                <option key={sem + 1} value={sem + 1}>
+                  Semester {sem + 1}
                 </option>
               ))}
-          </select>
-          <button className="filter-button flex items-center space-x-1 px-3 py-2 rounded-md bg-blue-500 text-white hover:bg-blue-700">
-            <FaFilter className="filter-icon h-4 w-4" />
-            Filters
+            </select>
+          </div>
+
+          {/* Filter by Subject */}
+          {selectedSemester && (
+            <div className="mb-4">
+              <label htmlFor="subject" className="block text-sm font-medium text-gray-700">
+                Subject
+              </label>
+              <select
+                id="subject"
+                value={selectedSubject}
+                onChange={handleSubjectChange}
+                className="w-full mt-1 p-2 border border-gray-300 rounded-md"
+              >
+                <option value="">All Subjects</option>
+                {subjectsBySemester[selectedSemester]?.map((subject, index) => (
+                  <option key={index} value={subject}>
+                    {subject}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
+
+          {/* Miscellaneous Checkbox */}
+          <div className="mb-4">
+            <label className="flex items-center text-sm font-medium text-gray-700">
+              <input
+                type="checkbox"
+                checked={isMiscellaneous}
+                onChange={() => setIsMiscellaneous(!isMiscellaneous)}
+                className="mr-2"
+              />
+              Miscellaneous
+            </label>
+          </div>
+
+          {/* Sort Order */}
+          <div className="mb-4">
+            <label className="block text-sm font-medium text-gray-700">Sort By</label>
+            <select
+              value={selectedSortOrder}
+              onChange={handleSortOrderChange}
+              className="w-full mt-1 p-2 border border-gray-300 rounded-md"
+            >
+              <option value="most-recent">Most Recent</option>
+              <option value="least-recent">Least Recent</option>
+              <option value="rating-high-low">Rating: High to Low</option>
+              <option value="rating-low-high">Rating: Low to High</option>
+            </select>
+          </div>
+
+          {/* Rating Slider */}
+          <div className="mb-4">
+            <label className="block text-sm font-medium text-gray-700">Rating Range</label>
+            <Range
+              step={0.1}
+              min={0}
+              max={5}
+              values={ratingRange}
+              onChange={handleRatingChange}
+              renderTrack={({ props, children }) => (
+                <div {...props} className="h-2 bg-blue-500 rounded-full mt-1">
+                  {children}
+                </div>
+              )}
+              renderThumb={({ props }) => (
+                <div
+                  {...props}
+                  className="w-4 h-4 bg-blue-700 rounded-full shadow focus:outline-none"
+                />
+              )}
+            />
+            <div className="text-sm text-gray-700 mt-2">
+              {ratingRange[0]} - {ratingRange[1]} stars
+            </div>
+          </div>
+
+          <button
+            className="w-full bg-blue-500 text-white py-2 rounded-md mt-4 hover:bg-blue-700"
+            onClick={() => toast.success("Filters Applied")}
+          >
+            Apply Filters
           </button>
+        </div>
+
+        {/* Cards Section */}
+        <div className="w-3/4">
+          {isLoading ? (
+            <div className="flex justify-center items-center h-64">
+              <div className="spinner w-11 h-11 relative">
+                <div className="absolute w-full h-full bg-blue-500 rounded-full animate-spin"></div>
+              </div>
+            </div>
+          ) : (
+            <>
+              <Cards uploads={filteredUploads} />
+
+              {/* Pagination Controls */}
+              <div className="flex justify-between items-center mt-4">
+                <button
+                  className={`px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 ${
+                    currentPage === 1 ? "cursor-not-allowed opacity-50" : ""
+                  }`}
+                  onClick={() => handlePageChange(currentPage - 1)}
+                  disabled={currentPage === 1}
+                >
+                  Previous
+                </button>
+                <span className="text-gray-700">
+                  Page {currentPage} of {totalPages}
+                </span>
+                <button
+                  className={`px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 ${
+                    currentPage === totalPages ? "cursor-not-allowed opacity-50" : ""
+                  }`}
+                  onClick={() => handlePageChange(currentPage + 1)}
+                  disabled={currentPage === totalPages}
+                >
+                  Next
+                </button>
+              </div>
+            </>
+          )}
         </div>
       </div>
 
-      <div className="max-w-[85%] mx-auto gap-3">
-        {isLoading ? (
-          <div className="flex justify-center items-center h-64">
-            <div className="spinner w-11 h-11 relative">
-              <div className="absolute w-full h-full bg-blue-500 rounded-full animate-[spinner-vse6n7_1.25s_infinite_ease]"></div>
-              <div className="absolute w-full h-full bg-blue-500 rounded-full animate-[spinner-vse6n7_1.25s_infinite_ease] [--rotation:90deg]"></div>
-              <div className="absolute w-full h-full bg-blue-500 rounded-full animate-[spinner-vse6n7_1.25s_infinite_ease] [--rotation:180deg]"></div>
-              <div className="absolute w-full h-full bg-blue-500 rounded-full animate-[spinner-vse6n7_1.25s_infinite_ease] [--rotation:270deg]"></div>
-            </div>
-          </div>
-        ) : (
-          <Cards
-            selectedFilter={selectedFilter}
-            selectedSemester={selectedSemester}
-            selectedSubject={selectedSubject}
-            uploads={uploads}
-          />
-        )}
-      </div>
-
+      {/* Upload Modal */}
       <Modal isOpen={isModalOpen} onClose={closeModal}>
         <UploadBox />
-        {/* <Sample /> */}
       </Modal>
     </div>
   );
 };
 
 export default MainPage;
+
