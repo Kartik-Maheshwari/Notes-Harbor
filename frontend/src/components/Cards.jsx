@@ -24,7 +24,7 @@ const Cards = ({
         return (
           <Card
             key={index}
-            title={fileName}
+            title={upload.title}
             image={transformUrl(upload.secure_url)}
             description={upload.description || "No description available."} // Fallback description
             fileUrl={upload.secure_url}

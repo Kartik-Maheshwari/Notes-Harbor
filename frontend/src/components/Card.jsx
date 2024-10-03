@@ -46,9 +46,8 @@ const Card = ({ title, image, description, fileUrl, note_id, name }) => {
 
   return (
     <div className="flex flex-col items-center justify-center bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition duration-300 ease-in-out transform hover:-translate-y-1 hover:scale-105 w-64 m-4">
-      <div className="relative flex justify-between items-center p-2">
+      <div className="relative flex justify-end items-center p-2">
         <div className="flex items-center">
-          <div className="w-10 h-10 rounded-full bg-gray-300 mr-4"></div>
           <div className="text-gray-800 font-semibold">{title}</div>
           <sub className="text-xs text-gray-500 ml-1">uploaded by {name}</sub>
         </div>
