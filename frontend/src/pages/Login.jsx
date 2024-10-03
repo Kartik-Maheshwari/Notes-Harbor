@@ -29,6 +29,8 @@ const LoginPage = () => {
         password,
       });
 
+      console.log("Login ke baad ka response:", response.data);
+
       if (response.data.success) {
         dispatch(login(response.data.user));
         setSuccess("Login successful! Redirecting to homepage...");
@@ -65,16 +67,21 @@ const LoginPage = () => {
 
   return (
     <div className=" m-10 border-4 border rounded-lg   max-w-500 grid  gap-5 grid-cols-1 md:grid-cols-2 p-10 overflow-y-hidden">
-
       {/* Left Section: Image */}
       <div className="flex items-center justify-center bg-white">
-        <img src="/image/login.png" alt="Login Illustration" className="w-3/4" />
+        <img
+          src="/image/login.png"
+          alt="Login Illustration"
+          className="w-3/4"
+        />
       </div>
 
       {/* Right Section: Login Form */}
       <div className="flex items-center justify-center bg-blue-600   rounded-lg p-">
         <div className="w-3/4 max-w-md">
-          <h1 className="text-white text-3xl font-semibold mb-4">Welcome Back!</h1>
+          <h1 className="text-white text-3xl font-semibold mb-4">
+            Welcome Back!
+          </h1>
           <p className="text-white mb-6">
             Don't have an account yet?{" "}
             <span
@@ -85,7 +92,9 @@ const LoginPage = () => {
             </span>
           </p>
 
-          {message && <div className="text-green-500 text-sm mb-4">{message}</div>}
+          {message && (
+            <div className="text-green-500 text-sm mb-4">{message}</div>
+          )}
 
           <form onSubmit={handleLogin}>
             {/* Email Field */}
@@ -126,7 +135,9 @@ const LoginPage = () => {
             </div>
 
             {error && <div className="text-red-500 text-sm mb-4">{error}</div>}
-            {success && <div className="text-green-500 text-sm mb-4">{success}</div>}
+            {success && (
+              <div className="text-green-500 text-sm mb-4">{success}</div>
+            )}
 
             {/* Login Button */}
             <button
