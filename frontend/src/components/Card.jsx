@@ -4,6 +4,7 @@ import { FaStar } from "react-icons/fa";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
+import { IoMdShare } from "react-icons/io";
 
 const Card = ({ title, image, description, fileUrl, note_id }) => {
   const [isLiked, setIsLiked] = useState(false); // Track like state
@@ -75,7 +76,7 @@ const Card = ({ title, image, description, fileUrl, note_id }) => {
             <AiOutlineComment className="text-xl" />
           </button>
           <button className="text-gray-600">
-            <AiOutlineHeart className="text-xl" />
+            <IoMdShare className="text-xl" />
           </button>
         </div>
       </div>
