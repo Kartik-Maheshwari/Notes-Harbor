@@ -12,8 +12,8 @@ const router = express.Router();
 
 router.get("/all", getAllUploads);
 router.get("/:id", getCardById);
+router.get("/user/notes", authenticate, getUploadsByUser);
 router.post("/", authenticate, fileupload);
 router.put("/:uploadId", authenticate, updateUpload);
-router.get("/user", authenticate, getUploadsByUser);
 
 export default router;

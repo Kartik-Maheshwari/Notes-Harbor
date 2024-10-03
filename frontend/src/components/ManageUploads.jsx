@@ -14,10 +14,19 @@ const ManageUploads = () => {
   useEffect(() => {
     // Fetch the uploads of the logged-in user
     const fetchUploads = async () => {
+      const token = localStorage.getItem("token");
+
       try {
         const response = await axios.get(
-          "http://localhost:3000/v1/uploads/user"
+          "http://localhost:3000/v1/uploads/user/notes",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
         );
+        console.log(response.data);
+
         setUploads(response.data);
       } catch (error) {
         console.error("Failed to fetch uploads", error);
@@ -61,7 +70,7 @@ const ManageUploads = () => {
       <h2 className="text-2xl font-bold mb-4">Manage Uploads</h2>
       {uploads.map((upload) => (
         <div
-          key={upload.id}
+          key={upload.asset_id}
           className="flex items-center justify-between bg-white p-3 mb-3 rounded-lg shadow-md"
         >
           {editingUpload === upload.id ? (
