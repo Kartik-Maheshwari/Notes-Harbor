@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { FaEdit, FaSave } from "react-icons/fa";
+import { toast } from "react-toastify";
+import { Link } from "react-router-dom";
 
 const ManageUploads = () => {
   const [uploads, setUploads] = useState([]);
@@ -65,6 +67,20 @@ const ManageUploads = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  const handleDelete = async (id) => {
+    const token = localStorage.getItem("token");
+    try {
+      await axios.delete(`http://localhost:3000/v1/uploads/${upload.asset_id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      // Remove the deleted note from the state
+      setUploads(uploads.filter((upload) => upload.asset_id !== id));
+    } catch (error) {
+      toast.error("Failed to delete upload", error);
+    }
+  }; 
   return (
     <div className="p-4 bg-gray-100 rounded-lg shadow-lg animate-fadeIn">
       <h2 className="text-2xl font-bold mb-4">Manage Uploads</h2>
@@ -73,57 +89,30 @@ const ManageUploads = () => {
           key={upload.asset_id}
           className="flex items-center justify-between bg-white p-3 mb-3 rounded-lg shadow-md"
         >
-          {editingUpload === upload.id ? (
-            <>
-              <input
-                type="text"
-                name="title"
-                value={formData.title}
-                onChange={handleChange}
-                className="w-1/3 p-2 border border-gray-300 rounded"
-              />
-              <input
-                type="text"
-                name="description"
-                value={formData.description}
-                onChange={handleChange}
-                className="w-1/3 p-2 border border-gray-300 rounded"
-              />
-              <input
-                type="text"
-                name="previewImg"
-                value={formData.previewImg}
-                onChange={handleChange}
-                className="w-1/3 p-2 border border-gray-300 rounded"
-              />
-              <button
-                onClick={handleSave}
-                className="ml-3 p-2 bg-blue-500 text-white rounded hover:bg-blue-700"
-              >
-                <FaSave />
-              </button>
-            </>
-          ) : (
-            <>
-              <div className="w-1/3">
-                <img
-                  src={upload.previewImg}
-                  alt={upload.title}
-                  className="w-full h-20 object-cover rounded"
-                />
-              </div>
-              <div className="w-1/3">
-                <h3 className="text-xl font-bold">{upload.title}</h3>
-                <p>{upload.description}</p>
-              </div>
-              <button
-                onClick={() => handleEdit(upload)}
-                className="ml-3 p-2 bg-green-500 text-white rounded hover:bg-green-700"
-              >
-                <FaEdit />
-              </button>
-            </>
-          )}
+          {/* Title and Timestamp */}
+          <div className="w-2/3">
+            <h3 className="text-xl font-bold">{upload.title}</h3>
+            <p className="text-gray-500 text-sm">
+              Uploaded: {new Date(upload.createdAt).toLocaleString()}
+            </p>
+          </div>
+
+          {/* Buttons */}
+          <div className="flex space-x-4">
+          <button
+  className="p-2 bg-blue-500 text-white rounded hover:bg-blue-700"
+>
+  <Link to={`/singlecard/${upload.asset_id}`} className="text-white">
+    View
+  </Link>
+</button>
+            <button
+              onClick={() => handleDelete(upload.id)}
+              className="p-2 bg-red-500 text-white rounded hover:bg-red-700"
+            >
+              Delete
+            </button>
+          </div>
         </div>
       ))}
     </div>
