@@ -14,6 +14,8 @@ import ManageFollowers from "./components/ManageFollowers";
 import ManageFollowing from "./components/ManageFollowing";
 import AccountSettings from "./components/AccountSettings";
 import AllUsers from "./pages/AllUsers.jsx";
+import ProfilePage from "./pages/ProFilePage.jsx"
+
 
 
 
@@ -41,8 +43,10 @@ function App() {
           <Route path="/singlecard/:id" element={<SingleCard />} />
 
           <Route path="/settings/uploads" element={<ManageUploads />} />
+          <Route path="/profilepage/:id" element={<ProfilePage />} />
           <Route path="/settings/followers" element={<ManageFollowers />} />
           <Route path="/settings/following" element={<ManageFollowing />} />
+         
           <Route
             path="/settings/account-settings"
             element={<AccountSettings />}

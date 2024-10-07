@@ -1,30 +1,30 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { FaUserMinus, FaInfoCircle } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
 const ManageFollowings = () => {
   const [followers, setFollowers] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchFollowers = async () => {
       try {
-        // Step 1: Fetch the follower IDs array
         const response = await axios.get(
           "http://localhost:3000/v1/follow/followers",
           {
             headers: {
-              Authorization: `Bearer ${localStorage.getItem("token")}`, // Pass token for authentication
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
             },
           }
         );
         const followerIds = response.data;
 
-        // Step 2: Fetch detailed information about followers based on their IDs
         const usersResponse = await axios.post(
           "http://localhost:3000/v1/follow/fetch-users",
-          { userIds: followerIds }, // Pass the array of follower IDs
+          { userIds: followerIds },
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -59,6 +59,11 @@ const ManageFollowings = () => {
 
   const closeModal = () => {
     setIsModalOpen(false);
+  };
+
+  const viewProfile = () => {
+    navigate(`/profilepage/${selectedUser._id}`); // Navigate to the profile page with the user's ID
+    setIsModalOpen(false); // Close the modal after navigating
   };
 
   return (
@@ -107,12 +112,20 @@ const ManageFollowings = () => {
               alt={selectedUser.username}
               className="w-24 h-24 rounded-full mb-4"
             />
-            <button
-              onClick={closeModal}
-              className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-300 ease-in-out"
-            >
-              Close
-            </button>
+            <div className="flex space-x-4">
+              <button
+                onClick={closeModal}
+                className="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition duration-300 ease-in-out"
+              >
+                Close
+              </button>
+              <button
+                onClick={viewProfile}
+                className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-300 ease-in-out"
+              >
+                View Profile
+              </button>
+            </div>
           </div>
         </div>
       )}

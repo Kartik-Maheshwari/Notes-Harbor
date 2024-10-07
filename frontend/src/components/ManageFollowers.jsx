@@ -1,31 +1,31 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { FaTrash, FaBan, FaInfoCircle } from "react-icons/fa";
+import { FaTrash, FaInfoCircle } from "react-icons/fa";
 import Modal from "react-modal";
+import { useNavigate } from "react-router-dom";
 
 const ManageFollowers = () => {
   const [followings, setFollowings] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedFollowing, setSelectedFollowing] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchFollowings = async () => {
       try {
-        // Step 1: Fetch the followings array containing user IDs
         const response = await axios.get(
           "http://localhost:3000/v1/follow/followings",
           {
             headers: {
-              Authorization: `Bearer ${localStorage.getItem("token")}`, // Pass the token for authentication
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
             },
           }
         );
         const followingIds = response.data;
 
-        // Step 2: Fetch detailed information about the users
         const usersResponse = await axios.post(
           "http://localhost:3000/v1/follow/fetch-users",
-          { userIds: followingIds }, // Pass the array of user IDs
+          { userIds: followingIds },
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -33,7 +33,6 @@ const ManageFollowers = () => {
           }
         );
         setFollowings(usersResponse.data);
-        console.log("Following data: ", usersResponse.data);
       } catch (error) {
         console.error("Failed to fetch followings", error);
       }
@@ -70,9 +69,14 @@ const ManageFollowers = () => {
     setSelectedFollowing(null);
   };
 
+  const viewProfile = () => {
+    navigate(`/profilepage/${selectedFollowing._id}`); // Navigate to profile page using user ID
+    closeModal();
+  };
+
   return (
     <div className="p-4 bg-gray-100 rounded-lg shadow-lg animate-fadeIn">
-      <h2 className="text-2xl font-bold mb-4">Manage Followings</h2>
+      <h2 className="text-2xl font-bold mb-4">Manage Followers</h2>
       {followings.map((following) => (
         <div
           key={following._id}
@@ -120,12 +124,20 @@ const ManageFollowers = () => {
           />
           <p>Email: {selectedFollowing.email}</p>
           <p>Username: {selectedFollowing.username}</p>
-          <button
-            onClick={closeModal}
-            className="mt-4 p-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-all duration-300 w-full"
-          >
-            Close
-          </button>
+          <div className="flex space-x-4 mt-4">
+            <button
+              onClick={closeModal}
+              className="p-2 bg-gray-500 text-white rounded hover:bg-gray-600 transition-all duration-300 w-full"
+            >
+              Close
+            </button>
+            <button
+              onClick={viewProfile}
+              className="p-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-all duration-300 w-full"
+            >
+              View Profile
+            </button>
+          </div>
         </Modal>
       )}
     </div>
