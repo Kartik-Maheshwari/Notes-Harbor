@@ -7,13 +7,13 @@ const authSlice = createSlice({
   name: "auth",
   initialState: {
     isLoggedIn: !!token, // True if token exists
-    user: null,
+    user: null, // User details (e.g., { userId, username, email })
     token: token, // Store token
   },
   reducers: {
     login: (state, action) => {
       state.isLoggedIn = true;
-      state.user = action.payload;
+      state.user = action.payload; // Assuming action.payload contains user details like { userId, username, email }
     },
     logout: (state) => {
       state.isLoggedIn = false;

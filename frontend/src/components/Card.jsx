@@ -19,8 +19,20 @@ const Card = ({ title, image, description, fileUrl, note_id, name }) => {
   const downloadurl = fileUrl.replace("/upload/", "/upload/fl_attachment/");
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
 
+  // Safely access userId using optional chaining
+  const userId = useSelector((state) => state.auth.user?.userId);
+
   const handleLikeClick = () => {
+    if (!isLoggedIn) {
+      toast.error("Please login to like the note.");
+      return;
+    }
+
+    // Log the userId to ensure it's correctly accessed
+    console.log("User ID: ", userId);
+
     setIsLiked(!isLiked);
+    // Here you can implement the API call to like the note using userId
   };
 
   const handleDownloadClick = (e) => {
@@ -75,10 +87,17 @@ const Card = ({ title, image, description, fileUrl, note_id, name }) => {
             View
           </Link>
         </div>
-      </div>
 
-     
-      
+        {/* Fourth div: Like Button */}
+        <div className="flex justify-between items-center p-4">
+          <AiOutlineHeart
+            onClick={handleLikeClick}
+            className={`text-2xl cursor-pointer ${
+              isLiked ? "text-red-500" : ""
+            }`}
+          />
+        </div>
+      </div>
     </div>
   );
 };

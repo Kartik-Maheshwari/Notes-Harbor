@@ -13,6 +13,7 @@ const UserSchema = new mongoose.Schema(
     followings: { type: Array, default: [] },
     isAdmin: { type: Boolean, default: false },
     institution: { type: String, max: 50 },
+    totalLikes: { type: Number, default: 0 },
     notes: [{ type: mongoose.Schema.Types.ObjectId, ref: "Upload" }],
     additionalDetails: {
       about: { type: String, default: "" },

@@ -182,3 +182,59 @@ export const getCardById = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
+
+export const liked = async (req, res) => {
+  try {
+    const { noteId } = req.body;
+    const userId = req.userId; // Logged-in user ID from token middleware
+
+    const note = await Upload.findById(noteId);
+
+    if (!note) {
+      return res.status(404).json({ message: "Note not found" });
+    }
+
+    // Check if the user has already liked the note
+    if (note.likes.includes(userId)) {
+      return res
+        .status(400)
+        .json({ message: "You have already liked this note" });
+    }
+
+    // If not liked, add the user to the likes array
+    note.likes.push(userId);
+
+    // Save the note with the updated likes array
+    await note.save();
+
+    // Return success response
+    return res.status(200).json({
+      message: "Note liked successfully",
+      likesCount: note.likes.length,
+    });
+  } catch (err) {
+    return res
+      .status(500)
+      .json({ message: "Server error", error: err.message });
+  }
+};
+
+export const getliked = async (req, res) => {
+  try {
+    const { noteId } = req.params;
+
+    // Find the note by its ID
+    const note = await Upload.findById(noteId).populate("likedBy", "username");
+    if (!note) {
+      return res.status(404).json({ message: "Note not found" });
+    }
+
+    // Return the likesCount and the list of users who liked the note
+    res.status(200).json({
+      likesCount: note.likesCount,
+      likedBy: note.likedBy.map((user) => user._id), // Return the list of user IDs
+    });
+  } catch (err) {
+    res.status(500).json({ message: "Server error", error: err });
+  }
+};

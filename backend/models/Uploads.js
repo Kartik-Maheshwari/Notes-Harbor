@@ -24,6 +24,8 @@ const uploadSchema = new mongoose.Schema({
   year: { type: Number },
   rating: { type: Number, default: 0 },
   isMiscellaneous: { type: Boolean, default: false },
+  likesCount: { type: Number, default: 0 }, // Track total likes
+  likedBy: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }], // Track which users liked this note
 });
 
 const Upload = mongoose.model("Upload", uploadSchema);

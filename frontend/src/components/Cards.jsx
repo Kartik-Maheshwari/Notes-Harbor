@@ -31,6 +31,7 @@ const Cards = ({
             note_id={upload.asset_id}
             style={{ width: "300px", height: "400px" }} // Adjust as needed
             name={upload.name}
+            likes={upload.likes}
           />
         );
       })}
